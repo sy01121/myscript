@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>oop2</title>
+    <script type="text/javascript" charset="utf-8">
+        // 原型prototype
+        // 构造函数方式
+        /*
+        function Person(name,age) {
+            this.name = name;
+            this.age = age;
+//            this.sayName = function () {
+//                alert('我是姓名！');
+//            };
+            this.sayName = sayName;
+        }
+        // 指向同一个引用
+        function sayName() {
+            alert(this.name);
+        }
+        var p1 = new Person('z3',20);
+        var p2 = new Person('z4',25);
+        //原因：new Person();执行一次，就创建一次function(){alert('我是姓名！');}，效率很低，并不是指向同一个引用
+        //alert(p1.sayName == p2.sayName); // false
+        alert(p1.age);  // 20
+        alert(p2.age);  // 25
+        p1.sayName(); // z3
+        p2.sayName();  // z4
+        alert(p1.sayName == p2.sayName); // true(指向同一个引用)
+        // 全局函数sayName解决构造函数方法的多次创建缺点，但全局函数，易被污染
+        */
+
+        // prototype 创建的每一个函数都有一个prototype属性，这个属性其实是一个指针，而这个指针总是指向一个对象
+        // 这个对象的用途就是将特定的属性和方法包含在内，起到一个所有实例所共享的作用
+        function Person() {
+
+        }
+        var obj = Person.prototype;
+        obj.name = 'z3';
+        obj.age = 20;
+        obj.sayName = function () {
+            alert(this.name);
+        };
+        var p1 = new Person();
+        var p2 = new Person();
+        /*
+        alert(p1.age); // 20
+        alert(p2.age); // 20
+        p1.sayName(); // z3
+        p2.sayName(); // z3
+        alert(p1.sayName == p2.sayName); // true
+        // 构造函数 原型对象 实例对象 三者关系
+        // 构造函数.prototype = 原型对象
+        alert(Person.prototype); // [object Object]
+        // 原型对象.constructor = 构造函数（.constructor总是指向构造函数）
+        alert(obj.constructor);  // function Person() {}
+        // 实例对象.prototype = 原型对象
+        // p1→Person→obj只有构造函数.prototype可以使用
+        // alert(p1.prototype); // undefined
+        */
+        // obj.isPrototypeOf(p1)指示对象是否存在于另一个对象的原型链中。如果存在，返回true，否则返回false。该方法属于Object对象，由于所有的对象都"继承"了Object的对象实例，因此几乎所有的实例对象都可以使用该方法。
+        // prototypeObject.isPrototypeOf( object )如果object不是对象，或者prototypeObject对象不出现在object的原型链中，则该方法返回false
+        alert(obj.isPrototypeOf(p1)); // true（专门判断原型对象是不是实例对象的原型，对象之间判断,与构造函数无关）
+        alert(typeof Person); // function
+        alert(obj.isPrototypeOf(Person));  // false 构造函数无法使用此方法
+        alert(Object.isPrototypeOf(Person));  // false 构造函数无法使用此方法
+    </script>
+</head>
+<body>
+
+</body>
+</html>

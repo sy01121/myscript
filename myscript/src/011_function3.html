@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function3</title>
+    <script type="text/javascript" charset="UTF-8">
+        // function参数
+        // 形参列表
+        // js中 函数的参数：形参（定义函数时定义的形式参数） 实参（调用函数时实际传入的参数）
+        /*
+        function test(a,b,c,d) {
+            // 形参的个数
+            alert(test.length); // 4
+            // js参数比较松散，java参数形参与实参个数不一致编译时就报错
+            // 模拟java形参与实参个数不一致时报错或提醒
+
+            // 函数的实际参数 内部就是一个数组去接收函数的实际参数
+            // arguments 对象 可以访问函数的实际参数
+            // arguments 对象 只能在函数的内部访问和使用
+            alert(arguments.length); // 2(实际参数的个数)
+            // 实参的值
+            alert(arguments[0]); // 10
+            alert(arguments[1]);  // 20
+
+            return a+b;
+
+            if (arguments.callee.length == arguments.length){
+                return a+b;
+            }else {
+                return '参数不正确！'
+            }
+            // arguments 对象 用得最多 还是做递归操作
+            // arguments.callee 指针指向函数本身（函数体）
+        }
+//        alert(test(10,20));  // 30
+//        alert(test()); // NaN
+        alert(test(10,20)); // 参数不正确！
+        */
+        function fact(num) {
+            if (num <= 1) return 1;
+//            else return num*fact(num-1);
+            // 避免fact被指空报错
+            else return num*arguments.callee(num-1);
+        }
+//        alert(fact(5)); // 120  // fact = null; TypeError: fact is not a function
+        var F = fact;
+        fact = null;
+        alert(F(5)); // 120 // fact = null; TypeError: fact is not a function
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function7</title>
+    <script type="text/javascript" charset="utf-8">
+        // 垃圾收集 方法1 标记方法  2 引用计数法
+        /*
+        function test() {
+            var a = 10;  //test执行时：被标记一次：被使用 //方法2 count=1
+            var b = 20;  //test执行时：被标记一次：被使用
+            var c;
+            c = a;  // count++ =2
+            a = 50;  // count--;a重新赋值，直到count == 0（被回收）
+        }
+        test();  //函数执行完毕之后 a,b又被标记一次：没有使用（此状态会被回收）
+        */
+
+
+        // 块级作用域概念
+
+        // 高级程序语言 java for if 块级作用域的概念（for if 独立的作用域）
+        // js for if 没有块级作用域的概念（一个函数是一个独立的作用域）
+        /*
+        function test() {
+            for (var i=1;i<=5;i++){
+                alert(i);
+            }
+            alert(i);  // 所以i可以访问
+        }
+        test();
+        */
+
+        // 模拟高级语言块级作用域
+        // js : ()表示执行
+        /*
+        function test() {
+            // 模拟一个封闭的独立环境
+            (function() {
+                for (var i=1;i<=5;i++){
+                    alert(i);
+                }
+            })();  //()括起来形成一个块级作用域，最后()运行
+            alert(i); // i is not defined i在上方匿名函数自调用作用域中执行用完被回收
+        }
+        test();
+        */
+        (function(){
+            alert('我直接执行了！');
+        })();
+    </script>
+</head>
+<body>
+
+</body>
+</html>

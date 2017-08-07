@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>object</title>
+    <script type="text/javascript" charset="utf-8">
+        // Object 所有类的基础类
+        // var obj = new Object();
+        // 实例化对象
+        var obj = {};
+        // 给对象设置属性和方法
+        obj.name = '张三';
+        obj.age = '23';
+        obj.sex = '男';
+        obj['birthday'] = '1990-11-20';
+        obj.say = function () {
+            alert('hello world!');
+        };
+        // 访问对象的属性和方法
+        /*
+        alert(obj.name);   // 张三
+        alert(obj.age);  // 23
+        alert(obj.sex);  // 男
+        obj.say();  // hello world!
+        */
+
+        // delete 操作符，只能删除对象的属性和方法
+        /*
+        delete obj.age;
+        delete obj.say;
+        alert(obj.name);   // 张三
+        alert(obj.age);  //  undefined
+        alert(obj.sex);  //  男
+        obj.say();  //  TypeError: obj.say is not a function
+         */
+
+        //  如何去遍历一个js对象，用for in语句式（也可以遍历数组（本质也是对象））
+        /*
+        for (attribute in obj){
+            alert(attribute+':'+obj[attribute]); // obj.attribute报错
+        }
+        */
+        /*
+         Object每个实例都会具有下列属性和方法：
+         Constructor: 保存着用于创建当前对象的函数。（构造函数）
+         hasOwnProperty(propertyName):用于检测给定的属性在当前对象实例中(而不是原型中)是否存在。
+         isPrototypeOf(Object): 用于检查传入的对象是否是另外一个对象的原型。
+         propertyIsEnumerable(propertyName):用于检查给定的属性是否能够使用for-in语句来枚举。
+         toLocaleString()：返回对象的字符串表示。该字符串与执行环境的地区对应.
+         toString():返回对象的字符串表示。
+         valueOf():返回对象的字符串、数值或布尔表示。
+         */
+        // constructor:保存着用于创建当前对象的函数（构造函数）。
+        /*
+        alert(obj.constructor);  //function Object() {[native code]}
+        var arr = [];
+        alert(arr.constructor);  // function Array() {[native code]}
+        */
+        //hasOwnProperty(propertyName):用于检测给定属性在当前对象实例中（而不是原型中）是都存在
+        /*
+        alert(obj.hasOwnProperty('name'));  // true
+        alert(obj.hasOwnProperty('tel'));  // false
+        */
+
+        // isPrototypeOf(Object)：检测原型
+        // propertyIsEnumerable(propertyName):检测给定属性是否能被for in所枚举出来
+        alert(obj.propertyIsEnumerable('sex'));  // true
+        alert(obj.propertyIsEnumerable('say'));  // true
+    </script>
+</head>
+<body>
+
+</body>
+</html>

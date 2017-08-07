@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>statement</title>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        var a1 = 10;
+        var a2 = 10.0;
+        if (a1==a2){
+            alert('相等');
+        }
+        */
+        // js数据自动转换机制
+        /*
+        var a = 1;
+        var b = true;
+        var c = '1';
+        // == 可以经过自动转换，比较的是数值
+        // === 可以经过自动转换，先比较数值，再比较数据类型
+        if (a == b){
+            alert('相等');  // 相等
+        }
+        if (a == b && b == c){
+            alert('相等');  // 相等
+        }
+        if (a === b){
+            alert('相等');
+        }else {
+            alert('不相等');  // 不相等
+        }
+        */
+        // js 三目运算符
+        /*
+        var c = 10/2 > 4 ? 5 : 3;
+        alert(c);
+        */
+
+        // for循环的特点
+        // 正常
+        /*
+        for(var i=0; i<5;i++){
+            alert('执行体执行了'+i+'次');
+        }
+        */
+        // 死循环
+        /*
+        for(;;){
+            console.log('执行体！');
+        }
+        */
+        var i = 0;
+        /*
+        while (i<5){
+            alert('执行体执行了'+i+'次');
+            i++;
+        }
+        */
+        // for循环模拟while
+        for(;i<5;i++){
+            alert('执行体执行了'+i+'次');
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

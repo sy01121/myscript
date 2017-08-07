@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>arrayECMA5</title>
+</head>
+<body>
+<script type="text/javascript" charset="utf-8">
+    var arr = [1,2,3,4,5,4,3,2,1];
+    // 新加位置的方法：indexOf lastIndexOf
+    // 他们查找数组的时候“===”
+    /*
+    // 1个参数的时候表示传值（与数组中的元素“===”），返回找到第一个值的索引位置（index从0开始）
+    var index1 = arr.indexOf(4);
+    alert(index1);  // 3
+    // 2参数的时候，第一个参数还是值，第二个参数表示开始查找的起始位置
+    var index2 = arr.indexOf(4,4);
+    alert(index2);  // 5
+    // lastIndexOf(用法参数同indexOf类似，区别lastIndexOf从后往前查找)
+    var index1 = arr.lastIndexOf(2);
+    alert(index1);  // 7
+    var index2 = arr.lastIndexOf(2,3);
+    alert(index2);  // 1
+     */
+//    5个新加迭代的方法
+//    every:对于数组的每一个元素进行一个函数的运行 如果都返回true，最后则返回true；如果有一个元素返回false，则最后返回false
+    // item,index,array 默认3个参数 元素 索引 数组
+    /*
+    var result1 = arr.every(function (item,index,array) {
+        return item > 0;
+    });
+    alert(result1);  //  true
+    var result2 = arr.every(function (item,index,array) {
+        return item > 2;
+    });
+    alert(result2); //  false
+     */
+//    some:(与every相似)：对于数组的每一个元素进行一次函数运行 如果有一个元素返回true，最后则返回true；如果都返回false，则最后返回false
+    /*
+    var r1 = arr.some(function (item,index,array) {
+        return item > 10;
+    });
+    alert(r1);  // false
+    var r2 = arr.some(function (item,index,array) {
+        return item > 4;
+    });
+    alert(r2);  // true
+    */
+//    filter:对于数组的每一个元素进行一个函数的运行 给定函数去执行 把过滤后的结果返回
+    /*
+    var r1 = arr.filter(function (item,index,array) {
+        return item > 2;
+    });
+    alert(r1);  // 3,4,5,4,3
+    alert(typeof r1);  // object
+     */
+//    forEach 循环数组每一项的值，并执行一个方法，相当于for(var i=0;i<array.length;i++)
+    /*
+    var r1 = arr.forEach(function (item,index,array) {
+        alert(index+':'+item);
+    });
+    alert(r1);  // undefined(无任何返回值)
+    */
+//    map 对于数组的每一个元素进行一次函数的运行 可以经过函数执行完毕后 把新（数组）结果返回
+    /*
+    var r1 = arr.map(function (item,index,array) {
+        return item*2;
+    });
+    alert(r1);  // 2,4,6,8,10,8,6,4,2
+     */
+    // reduce reduceRight 变量的起始位置不同
+    // 函数变量意义：前一个值，当前值，索引位置，array
+    var r1 = arr.reduce(function (prev,cur,index,array) {
+        return prev+cur;
+    });
+    alert(r1); // 25
+    var r2 = arr.reduceRight(function (prev,cur,index,array) {
+        return prev+cur;
+    });
+    alert(r2); // 25
+</script>
+</body>
+</html>

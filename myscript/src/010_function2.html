@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function2</title>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        // 3种方式定义函数
+        // 1. function语句式
+        function test1() {
+            alert('我是test1');
+        }
+        test1();  // 我是test1
+        // 2.函数的直接量方式（ECMAScript比较推荐的方式）
+        var test2 = function () {
+            alert('我是test2');
+        };
+        test2();  // 我是test2
+
+        // 3.function构造函数式(最后一个参数是函数体)
+        var test3 = new Function('a','b','c','return a+b+c;');
+        alert(test3(2,3,4)); // 9
+        */
+        // 效率方面
+        /*
+        var d1 = new Date();
+        var t1 = d1.getTime(); // 获得当前时间的毫秒数
+        for (var i=0;i<100000;i++){
+            // function语句形式
+            // 只被解析一次就放到内存中，使用时直接调用就行（占用内存大）
+            //function test1() {;} // 2
+            // 函数的直接量形式
+            //var test2 = function () {;} // 2
+            // function构造函数式
+            // 每调用一次就要重新新建函数对象而后被销毁（占用内存低，效率低，只调用一次函数可以用）
+            var test3 = new Function(); // 339 效率最低
+        }
+        var d2 = new Date();
+        var t2 = d2.getTime();
+        alert(t2-t1);
+        */
+        // 解析顺序问题 对于function语句式的函数，javaScript解析器会优先解释（跟其他语言一样：全局变量先声明后赋值）
+        /*
+        // test1();  // 111(没问题)
+        // test1函数相当声明了一个全局变量
+        function test1() {
+            alert('111');
+        }
+        // test1(); // 111(没问题)
+        // test2();  // TypeError: test2 is not a function
+        // alert(test2); // undefined 表示变量声明了，但没有赋值
+        // alert(test2);  // 变量没声明的话，直接报错：ReferenceError: test2 is not defined
+        var test2 = function () {
+            alert('222');
+        };
+        // test2();  // 222（没问题）
+        */
+        /*
+        function f(){return 1;} 				// 函数1
+        alert(f());		//返回值为4 说明第1个函数被第4个函数覆盖
+        var f = new Function("return 2;");		// 函数2
+        alert(f());		//返回值为2 说明第4个函数被第2个函数覆盖
+        var f = function(){return 3;}			// 函数3
+        alert(f());	       //返回值为3 说明第2个函数被第3个函数覆盖
+        // （已经优先被解析过，按顺序执行到这里不会再次被解析）
+        function f(){return 4;} 				// 函数4
+        alert(f());		//返回值为3 说明第4个函数被第3个函数覆盖
+        var f = new Function("return 5"); 		// 函数5
+        alert(f());	//返回值为5 说明第3个函数被第5个函数覆盖
+        var f = function(){return 6 ;}			// 函数6
+        alert(f());		//返回值为6 说明第5个函数被第6个函数覆盖
+        */
+        // 函数作用域概念
+        // var test = new Function('return k;'); // 与t1函数内的相同
+        var k = 1; // 全局变量
+        function t1() {
+            // 局部变量
+            var k = 2;
+            // function语句式
+//            function test() {
+//                return k;
+//            }  // 2（函数的作用域）
+            // 函数的直接量方式
+//            var test = function () {
+//                return k;
+//            };  // 2（函数的作用域）
+            // function构造函数式
+            // 顶级函数（具有顶级作用域）
+            var test = new Function('return k;'); //动态构造
+            alert(test());  // 1
+        }
+        t1();
+    </script>
+</head>
+<body>
+
+</body>
+</html>

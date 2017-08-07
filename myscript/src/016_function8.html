@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function8</title>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        var name = 'xiao A';
+        var obj = {
+            name : 'xiao B',
+            getName : function () {
+                return function () {
+                    return this.name;
+                }
+            }
+        };
+        // obj.getName()执行完毕后，生成一个function函数，函数处在全局环境中，
+        // 根据作用域链的概念，此function执行只能在平级或上一级中寻找变量
+        alert(obj.getName());  // function () {return this.name;}
+        var k = obj.getName();  // 全局作用域
+        alert(typeof k); // function类型
+        alert(k());  // xiao A
+        alert(obj.getName()());  // xiao A
+        */
+        /*
+        var name = 'xiao A';
+        var obj = {
+            name : 'xiao B',
+            getName : function () {
+                // this 总是指向调用者
+                var o = this;
+                return function () {
+                    return o.name;
+                }
+            }
+        };
+        alert(obj.getName()()); // xiao B
+        var k = obj.getName();
+        alert(k()); // xiao B
+        */
+
+        // 闭包：一个函数可以访问另一个函数作用域中的变量
+        // 封闭性：private 起到一个保护变量的作用
+        // 1级作用域
+        function f(x) {  // 2级作用域
+            var temp = x;  //局部变量   //f(50)执行完以后temp被标记为：没有使用
+            return function (x) { // 3级作用域（function 有了一个执行域 var obj）
+                temp += x;  // 又被使用 temp被重新标记，不会被垃圾回收
+                alert(temp);
+            }
+        }
+        var a = f(50);
+        alert(a);   //  function (x) {temp += x;alert(temp);}
+        a(5);   // 55
+        a(10);  // 65
+        a(20);  //85
+    </script>
+</head>
+<body>
+
+</body>
+</html>

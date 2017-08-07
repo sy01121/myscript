@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ECMAScript5 Object的新属性方法</title>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        * Object.create(prototype[,descriptors])
+        * 方法用于创建一个对象，并把其prototype属性赋值为第一个参数，同时可以设置多个descriptors
+        * 这样就可以创建一个原型链干净对象了
+        * */
+        var o = Object.create({
+            say : function () {
+                alert(this.name);
+            },
+            name : 'z3'
+        });
+        console.log(o); // 原型对象为Object
+        function Person() {
+
+        }
+        var obj = Person.prototype;
+        obj.name = 'z3';
+        obj.say = function () {
+            alert(this.name);
+        };
+        var p1 = new Person();
+        console.log(p1); // 原型链上有Person.prototype
+    </script>
+</head>
+<body>
+
+</body>
+</html>

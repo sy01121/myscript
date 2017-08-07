@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>objectsingleton</title>
+    <script type="text/javascript" charset="UTF-8">
+        /*
+         单体对象：
+         Global对象（全局）这个对象不存在，无形的对象
+         其内部定义了一些方法和属性：encodeURI 、encodeURIComponent、decodeURI、decodeURIComponent、eval、parseInt、parseFloat、isNaN、Escape、 unescape
+         Math对象
+         内置的Math对象可以用来处理各种数学运算
+         可以直接调用的方法：Math.数学函数（参数）
+         求随机数方法：Math.random(),产生   [0，1)  范围一个任意数
+         Date对象
+         获取当前时间的一系列详细方法
+         基本包装类型：Boolean、String、Number和java的用法类似
+        */
+        // Global 全局的 终极的 兜底的对象（实际不存在的）
+        /*
+        var uri = 'https://www.baidu.com cn';
+        // encodeURI 、encodeURIComponent 编码 URI
+        var str1 = encodeURI(uri); // (url :// 不会进行编码)
+        alert(str1);  // https://www.baidu.com%20cn
+        var str2 = encodeURIComponent(uri); // 常用方法（任何不标准的文字都会进行编码）
+        alert(str2);  // https%3A%2F%2Fwww.baidu.com%20cn
+        // decodeURI、decodeURIComponent  解码 URI 对应解码方法
+        alert(decodeURI(str1));
+        alert(decodeURIComponent(str2));
+        */
+        // eval(string) 方法 无形的javaScript解析器（很重要很常用的方法）
+        /*
+        var str1 = 'var a = 6,b = 10';
+        eval(str1);
+        alert(a+b); // 16
+        // 数组字符串 直接使用：eval(stringarr)
+        // 从服务器返回‘数组型字符串’数据，直接用eval解析使用
+        // 对象用法：{name:'张三',age:23}（无法直接使用）
+        var strobj = '{name:"张三",age:23}';
+//        var obj1 = eval(strobj);
+//        alert(obj1.name);  // 报错
+        // 对象字符串必须加()作用域执行下再赋值好用
+        var obj2 = eval('('+strobj+')');
+        alert(obj2.name);  // 张三
+        */
+        // parseInt、parseFloat（会进行类型转换）
+        /*
+        var num1 = parseInt('20');
+        var num2 = parseInt('20.5');
+        var num3 = parseFloat('20');
+        var num4 = parseFloat('20.5');
+        // num1:20  num2:20  num3:20  num4:20.5
+        alert('num1:'+num1+'  num2:'+num2+'  num3:'+num3+'  num4:'+num4);
+        alert(typeof num1); // number
+        alert(typeof num2); // number
+        alert(typeof num3); // number
+        alert(typeof num4); // number
+        */
+        // escape、 unescape URI 编码 解码（针对文字）
+        /*
+        var str = '悦悦啦啦啦';
+        var str1 = escape(str);
+        alert(str1); // %u60A6%u60A6%u5566%u5566%u5566
+        var str2 = unescape(str1);
+        alert(str2); // 悦悦啦啦啦
+        */
+        // isNaN // 如果不是number类型 返回true 是number类型返回false
+        // 会自己进行类型转换
+        /*
+        var a = '10';
+        var b = 11;
+        var c = 'abcd10e';
+        alert(isNaN(a));  // false
+        alert(isNaN(b));  // false
+        alert(isNaN(c));  // true
+        //在js里面 只有NaN 自己不等于自己本身
+        if (NaN == NaN){
+            alert('相等');
+        }else {
+            alert('不相等');  // 不相等
+        }
+        */
+        // Date 日期
+        var date = new Date();
+        var years = date.getYear();
+        alert(years);
+        var years1 = date.getFullYear();
+        var month = date.getMonth()+1;
+        var da = date.getDate();
+        // 获得星期数
+        var day = date.getDay();
+        var hours = date.getHours();
+        var min = date.getMinutes();
+        var sc = date.getSeconds();
+        document.write('今天是'+years1+'年'+month+'月'+da+'日  '+hours+':'+min+':'+sc+'  星期'+day);
+        document.write('\n'+date.getTime()); // 当前时间的毫秒数
+    </script>
+</head>
+<body>
+
+</body>
+</html>

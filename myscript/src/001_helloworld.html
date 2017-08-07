@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello World</title>
+    <!--<script type="text/javascript" charset="utf-8">-->
+        <!--// helloworld-->
+        <!--// alert属于当前窗口（window）的方法，当前浏览器（BOM）对象-->
+        <!--// 弹出警告框-->
+        <!--window.alert('hello javascript!my comming...');-->
+        <!--// 利用文档对象（DOM）-->
+        <!--document.write('我是第一个程序...！');-->
+        <!--// 把内容打印到控制台-->
+        <!--console.info('hello js!!!');-->
+    <!--</script>-->
+    <!--  外部引入文件src属性 -->
+    <!-- 解析顺序 从上到下 边解析边执行 -->
+    <!-- 延迟执行：defer 可以延迟执行代码（当页面都加载完毕以后window.onload,页面加载的时候001.js文件已经引入进来了，提前放进去了） -->
+    <script type="text/javascript" charset="UTF-8" defer="defer" src="../commons/001.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        window.alert('我是HTML内部引用代码！');
+    </script>
+</head>
+<body>
+
+</body>
+</html>

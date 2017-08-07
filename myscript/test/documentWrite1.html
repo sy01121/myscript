@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>documentWrite1</title>
+</head>
+<body>
+<p>测试文字</p>
+<script type="text/javascript" charset="UTF-8">
+//    document.write(window.location.href="http://www.baidu.com");  // 好用
+//    document.appendChild(window.location.href="http://www.baidu.com");  // 好用
+//    document.getElementsByTagName('body')[0].appendChild(window.location.href="http://www.baidu.com");  // 好用
+//    document.getElementsByTagName('body')[0].appendChild('<script type="text/javascript" charset="UTF-8">alert("123")<\/script>');  // 失败
+    document.write('<script type="text/javascript" charset="UTF-8">alert("123")<\/script>'); // 好用
+</script>
+</body>
+</html>

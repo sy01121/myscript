@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>objtest</title>
+    <script type="text/javascript" charset="UTF-8">
+        // 构造函数
+        // var obj = new Object();
+        // alert(obj.constructor); // function Object() {[native code]}
+        function Map() {
+            // this指当前（实例化）的对象
+            // private
+            var obj = {}; // 空对象容器，承装键值对
+            // put 方法，给实例化的对象传属性和值
+            this.put = function (key,value) {
+                obj[key] = value;    // 把键值对绑定到obj对象上
+            };
+            // size方法 获得map容器键值对的个数
+            this.size = function () {
+                var count = 0;
+                for (var attr in obj){
+                    count++;
+                }
+                return count;
+            };
+            // get 方法 根据key取得value
+//            this.get = function (key) {
+//                if (obj[key] || obj[key]===0 || obj[key]===false){
+//                    return obj[key];
+//                }else {
+//                    return null;
+//                }
+//            }
+            // 同样好用（完美）
+            this.get = function (key) {
+                if (obj[key] === undefined){
+                    return null;
+                }else {
+                    return obj[key];
+                }
+            };
+            // remove 删除方法
+            this.remove = function (key) {
+                if (obj[key] === undefined){
+                    return;
+                }else {
+                    delete obj[key];
+                }
+            };
+            // eachMap 遍历map容器的方法（添加回调函数）
+            // fn和回调函数作为参数
+            this.eachMap = function (fn) {
+                for (var attr in obj){
+                    fn(attr,obj[attr]);
+                }
+            }
+        }
+        //模拟java里的Map
+        var m = new Map();
+        m.put('01','abc');
+        m.put('02',0);
+        m.put('03',false);
+        m.put('04',true);
+        m.put('05',new Date());
+        //size方法
+        //alert(m.size()); // 5
+//        alert(m.get('02')); // 0
+//        alert(m.get('03')); // false
+//        alert(m.get('05')); // Mon Jul 10 2017 15:14:54 GMT+0800
+//        alert(m.get('06')); // null
+//        m.remove('03');
+//        alert(m.get('03'));  // null
+        m.eachMap(function (key,value) {
+            alert(key+':'+value);
+        })
+        
+    </script>
+</head>
+<body>
+</body>
+</html>

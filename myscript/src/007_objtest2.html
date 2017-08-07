@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>objtest2</title>
+    <script type="text/javascript" charset="UTF-8">
+        // 利用js对象特性，去掉数组中的重复项
+        var arr = [1,10,2,4,3,5,4,1,5,2,6,7,7,8,9,10];
+        // js对象的特性：在js对象中key值是永远不会重复的
+        /*
+        var obj = new Object();
+        obj.name = '张三';
+        obj.age = '23';
+//        alert(obj.name); // 张三
+        obj.name = '李四';
+        alert(obj.name); // 李四 会覆盖掉之前的“张三”值
+        */
+        // 1.把数组转成一个js对象
+        // 2.把数组中的值，变成js对象中的key
+        // 3.把这个对象 再还原为数组
+
+        // 把数组转成对象
+        function toObject(arr) {
+            // 定义私有空对象，盛放转化后的元素
+            var obj = {};
+            for (var i=0,j=arr.length;i<j;i++){
+                obj[arr[i]]=true; // 对象值随意设置无用
+            }
+            return obj;
+        }
+        // 把对象还原为数组
+        function keys(obj) {
+            // 同理声明个空数组，存放转化后的元素
+            var arr = [];
+            for (var attr in obj){
+                // 保险起见先检测下给定属性在当前对象实例（而不是原型中）中是否存在
+                if (obj.hasOwnProperty(attr)){  // YUI底层代码
+                    arr.push(attr);
+                }
+            }
+            return arr;
+        }
+
+        // 综合方法  去掉数组中的重复项
+        function uniq(newArr) {
+            return keys(toObject(newArr));
+        }
+        //1,2,3,4,5,6,7,8,9,10 成功
+        alert(uniq(arr));
+    </script>
+</head>
+<body>
+
+</body>
+</html>

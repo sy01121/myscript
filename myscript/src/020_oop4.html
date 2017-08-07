@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>oop</title>
+    <script type="text/javascript" charset="utf-8">
+        /* 原型的另外一个作用就是扩展对象中的属性和方法的
+         模拟Array中的each循环方法
+         forEach
+        * */
+        // Array each 方法
+        // ECMA5 forEach 循环遍历数组的每一项（只适合遍历一维数组）
+        /*
+        var arr = [1,2,3,4,5,6]; // 一维数组
+        var arr1 = [1,2,3,4,[5,[6,[7]]]];  // 四维数组
+        arr.forEach(function (item,index,array) {
+            alert(item); // 分别弹出 1 2 3 4 5 6
+        });
+        arr1.forEach(function (item,index,array) {
+            alert(item); // 分别弹出 1 2 3 4 5,6,7
+        });
+        */
+
+        // 自己实现一个Array each方法 并且能遍历多维数组
+        var arr = [1,2,3,4,[5,[6,[7]]]];  // 等待遍历的四维数组
+        // 利用到原型的作用：扩展对象中的属性和方法
+        Array.prototype.each = function (fn) {
+            try{
+                //1. 目的：遍历数组每一项，首先遍历到什么地方了，要有个计数器：记录当前遍历的元素位置
+                // var i = 0; // 可以，但耦合性高，后面所有操作代码再用变量i容易冲突
+                // 给this添加个属性
+                this.i || (this.i = 0);
+                //2. 严谨的判断什么时候走each核心方法
+                // 当数组的长度大于0的时候 && 传递的参数必须为函数
+                if(this.length > 0 && fn.constructor == Function){
+                    //3.开始遍历数组的每一项（采用循环 for 或者 while）
+                    //for(i in this){} // 遍历数组的特殊方法，this维数太多，多维i值相同，会报错
+                    while(this.i < this.length){  // while循环的范围
+                        //核心代码（稍等写）
+                        // 获得数组每一项的值
+                        var e = this[this.i];
+                        // 如果当前元素获取到了 && 当前元素是一个数组
+                        if (e && e.constructor == Array){
+                            // 直接做递归操作
+                            e.each(fn);
+                        }else {
+                            //如果不是数组（那就是一个单个元素）直接执行传入函数即可
+                            //fn(e); // 可以，不太好
+                            //用apply或者call
+                            //fn.apply(null,[e]); // fn就在当前环境执行就行，环境参数可以为空
+                            //var obj = true;
+                            //fn.apply(obj,[e]); // 也可以 但是新建的obj变量，占用内存，不合理
+                            // e存在，值为true，可直接用，不用声明新变量
+                            //fn.apply(e,[e]);
+                            fn.call(e,e); //这目的就是为了把数组的当前元素传递给fn 并让函数执行
+                        }
+
+                        this.i++;
+                    }
+                    this.i = null; // 释放内存，垃圾回收机制回收变量
+                }
+
+            } catch(ex){
+                // do something
+                alert(ex);
+            }
+            // this指调用的数组，方法结果返回原数组，不改变数组值
+            return this;
+        };
+        arr.each(function (item) {
+            alert(item);
+        });  // 仿照forEach方法调用
+    </script>
+</head>
+<body>
+
+</body>
+</html>

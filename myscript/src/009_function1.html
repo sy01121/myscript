@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>function</title>
+    <script type="text/javascript" charset="UTF-8">
+        // 简单的一个函数：function关键字+函数名字（没有返回值）
+        // 参数列表相当于函数的入口，return相当于函数的出口
+        /*
+        function test(a,b) {
+            // alert('123');  // 123
+            return a+b;
+            // return后面的语句不执行，return跳出本次循环进入下次循环
+            // alert('abc');
+        }
+        var c = test(10,20);
+        // alert(c);   //  30
+        // 函数也是一种数据类型（function函数）
+        alert(typeof test); // function
+        */
+
+        function test1(aa) {
+            aa();
+        }
+        function test2() {
+            alert('执行啦！');
+        }
+        test1(test2); // 执行啦！
+        // 也可以直接在参数里写匿名函数
+        test1(function () {
+            alert('我也执行啦！');
+        });  // 我也执行啦！
+
+        // 在js中函数是可以嵌套定义的（没有意义尽量不要这样去定义）
+        function test3() {
+            function test4() {
+                alert('我是test4');
+            }
+            test4();
+        }
+        // 执行的作用域不对，局部变量不能做全局变量使用
+        // test4(); // ReferenceError: test4 is not defined
+        test3();  // 我是test4
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>variable</title>
+    <script type="text/javascript" charset="utf-8">
+        // 关于全局变量和局部变量的简单说明
+        /*
+        var a = 3;   // number      全局变量
+        // 变量一共有两种：全局变量 局部变量
+        function test() {
+            // var a=2;        // 局部变量
+            // var b = 2;      // 局部变量
+            c = 3;             // 全局变量
+            alert(a);
+        }
+        // js解析顺序，从上到下，test()方法还没执行，变量c还没定义
+        // alert(c);       // ReferenceError: c is not defined
+        test();
+        // alert(b);
+        alert(c);  // 3
+        */
+        // JavaScript是弱类型变量语言，根据赋值决定变量的类型
+        // Number类型 整数和小数
+        /*
+        var a1 = 10;
+        var a2 = 10.5;
+        var a3 = NaN;  // not a number
+        var a4 = 1/0;  // 正无穷
+        var a5 = -1/0; // 负无穷
+        // a1:10 a2:10.5 a3:NaN a4:Infinity a5:-Infinity
+        // alert('a1:'+a1+' a2:'+a2+' a3:'+a3+' a4:'+a4+' a5:'+a5);
+        var a6 = 070; // 8进制
+        var a7 = 0xA; // 16进制
+        // alert('a6:'+a6+'  a7:'+a7);  // a6:56  a7:10
+
+        var a = 0.1;
+        var b = 0.2;
+        if (a+b == 0.3){
+            alert('等于0.3');
+        }else {
+            // alert('不等于0.3'); // 不等于0.3
+            //不要做这样的测试，因为浮点数值最高精度是17位，而是0.300000000000000004
+            // alert(a+b); // 0.30000000000000004
+        }
+        var a8 = parseInt('aaabbcc');   // NaN 不是一个数
+        alert(a8);  // NaN
+        var a9 = parseInt('12abcd');
+        alert(a9);  // 12
+        var a10 = parseInt('a12bcd');
+        alert(a10); // NaN
+        */
+
+        // undefined 数据类型 他的值只有一个：undefined 表示变量声明了，但没有被赋值
+        /*
+        var b1;
+        alert(b1); // undefined
+
+        // Null 空值
+        var n1 = null;
+        alert(n1);  // null
+
+        // 基本数据类型：Number、Boolean、String、Undefined、Null
+        // String (根据赋值决定变量的类型)
+        var str1 = '我是字符串1';
+        var str2 = '我是字符串2';
+        // str1:我是字符串1    str2:我是字符串2
+        alert('str1:'+str1+'    str2:'+str2);
+        */
+
+        // Boolean
+        /*
+        var flag1 = false;
+        var flag2 = true;
+        if (flag2){
+            alert(flag2); // true
+        }else {
+            alert(flag1);
+        }
+        */
+
+        // 引用数据类型：Object类型 (比如对象、数组、RegExp、Date...)
+        /*
+        var arr = [1,2,3];      // 数组类型
+        alert(arr); // 1,2,3
+        var dates = new Date();     // 日期类型
+        alert(dates); // Sat Jul 01 2017 16:59:17 GMT+0800
+        var obj = {a:'1',b:'2',c:'3'}; // 对象类型
+        alert(obj); // [object Object]
+        alert(obj.a+obj.b+obj.c); // 123
+        */
+
+        // typeof 关键字/操作符 用来判断数据类型的
+        var a = 10;
+        alert('a('+a+')数据类型为：'+typeof a);  // a(10)数据类型为：number
+        var b = 10.5;
+        alert('b('+b+')数据类型为：'+typeof b);  // b(10)数据类型为：number
+        var c;
+        alert('c('+c+')数据类型为：'+typeof c);  // c(undefined)数据类型为：undefined
+        var d = null;   // 表示一个空对象的引用，所以null是对象类型
+        alert('d('+d+')数据类型为：'+typeof d);  // d(null)数据类型为：object
+        var e = 'abcd';
+        alert('e('+e+')数据类型为：'+typeof e);  // e(abcd)数据类型为：string
+        var f = true;
+        alert('f('+f+')数据类型为：'+typeof f);  // f(true)数据类型为：boolean
+        var g = NaN;
+        alert('g('+g+')数据类型为：'+typeof g);  // g(NaN)数据类型为：number
+        var h = new Date();
+        alert('h('+h+')数据类型为：'+typeof h);  // h(Sat Jul 01 2017 17:17:22 GMT+0800)数据类型为：object
+        var i = [1,2,3];
+        alert('i('+i+')数据类型为：'+typeof i);  // i(1,，3)数据类型为：object
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

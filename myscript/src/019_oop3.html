@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>oop3</title>
+    <script type="text/javascript" charset="utf-8">
+        // 原型对象.isPrototypeOf(实例对象); 判断原型的方法
+        // ECMA5 Object.getPrototypeOf():根据实例对象获得原型对象
+        function Person() {
+            
+        }
+        // 原型对象起到一个共享的作用
+        Person.prototype.name = 'z3';
+        Person.prototype.age = 20;
+        Person.prototype.sayName = function () {
+            alert('我是原型对象的方法！');
+        };
+        // 实例化对象
+        /*
+        var p1 = new Person();
+        alert(p1.name);  // z3
+        var prototypeObj = Object.getPrototypeOf(p1);
+        alert(prototypeObj == Person.prototype); // true
+        */
+        /*每次代码读取一个对象属性的时候：首先会进行一次搜索：搜索实例对象里name属性，看看有没有，如果有，则直接返回值
+        * 如果没有，再去p2的实例所对应的原型对象里去搜索name属性，如果有就返回，没有返回undefined
+        * */
+        /*
+        var p2 = new Person();
+        p2.name = 'w5';   // 实例对象的name属性w5
+        // 想获得p2的实例所对应的原型对象的name属性
+        // 方法一：
+        // 可用于原型对象里原始的默认密码被修改，忘记原始密码时，可删除更改密码的实例属性
+         delete p2.name;
+        alert(p2.name); // z3
+        // 方法二：直接找到原型对象的name属性
+        alert(Object.getPrototypeOf(p2).name); // z3
+        //alert(p2.name);  // w5
+        */
+
+        // 判断一个对象属性是属于原型属性 还是属于实例属性
+        /*
+        var p3 = new Person();
+        alert(p3.name);  // z3
+        alert(p3.hasOwnProperty('name'));  // false
+        p3.name = 'z6';
+        alert(p3.name);  // z6
+        alert(p3.hasOwnProperty('name'));  // true
+        */
+
+        // in 操作符：for-in
+        // in操作符可以单独使用：判断属性在不在实例对象中（无法区分实例对象属性与原型属性）
+        // 换言之 in操作符 判断属性是否存在于 实例对象和原型对象中
+        /*
+        var p1 = new Person();
+        alert('name' in p1);  // true
+        var p2 = new Person();
+        p2.name = 'w5';
+        alert('name' in p2);  // true
+        alert('nameaaa' in p2);  // false
+        */
+
+        // 用.hasOwnProperty()和in操作符两个方法实现：判断一个属性 是否存在原型中
+        // 在原型对象中是否存在这个属性（而非实例对象中），第一个参数：当前实例对象 第二个参数：要判断的属性
+        // 就是返回个布尔值：是true  不是false
+        /*
+        function hasPrototypeProperty(obj,name) {
+            return !obj.hasOwnProperty(name) && (name in obj);
+        }
+        var p1 = new Person();
+        alert(hasPrototypeProperty(p1,'name'));  // true
+        p1.name = 'w5';
+        alert(hasPrototypeProperty(p1,'name'));  // false
+        */
+
+        // ECMA5 新特性：Object.keys()
+        // 拿到当前对象里所有的keys 返回一个数组
+        /*
+        var p1 = new Person();
+        p1.sex = '男';
+        var attributes1 = Object.keys(p1);
+        alert(attributes1);  // sex (不包括原型对象里的)
+        var attributes2 = Object.keys(Object.getPrototypeOf(p1));
+        alert(attributes2); // name,age,sayName
+        var attributes3 = Object.keys(Person.prototype);
+        alert(attributes3); // name,age,sayName
+
+        // ECMA5 constructor属性：该属性是不能被枚举的（ECMA5底层，判断属性能否被枚举，标记[eable = false]）
+        // Object.getOwnPropertyNames 枚举对象所有的属性：不管该内部属性能否被枚举（但不包括prototype中的属性，返回一个数组）
+        var attributes4 = Object.getOwnPropertyNames(Person.prototype);
+        alert(attributes4); // constructor,name,age,sayName
+        var attributes5 = Object.getOwnPropertyNames(p1);
+        alert(attributes5); // sex
+        alert(p1.constructor); //    function Person() {}
+        */
+
+        // 判断一个属性是否可被枚举 propertyIsEnumerable(propertyName)
+        var p1 = new Person();
+        p1.hobby = '打篮球';
+        alert(p1.propertyIsEnumerable('hobby')); // true
+        alert(p1.propertyIsEnumerable('name')); // false
+        var a = (function () {
+            var arr = [],i = 0;
+            for (key in p1){
+                arr[i] = key+':'+p1[key];
+                i++;
+            }
+            return arr;
+        })();
+        console.log(a);  // ["hobby:打篮球", "name:z3", "age:20", "sayName:function () {↵            alert('我是原型对象的方法！');↵        }"]
+    </script>
+</head>
+<body>
+
+</body>
+</html>
