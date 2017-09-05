@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实现tabel全选反选取消功能</title>
+    <!-- CSS代码 -->
+    <style type="text/css">
+        table{
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<input type="button" onclick="CheckAll();" value="全选" />
+<input type="button" onclick="CheckReverse();" value="反选" />
+<input type="button" onclick="CheckCancel();" value="取消" />
+
+<table  border="2">
+    <tbody id="tb1">
+    <tr>
+        <td><input type="checkbox" /></td>
+        <td>mysql-001</td>
+        <td>10.10.8.10</td>
+        <td>15379</td>
+    </tr>
+
+    <tr>
+        <td><input type="checkbox" /></td>
+        <td>redis-001</td>
+        <td>10.10.9.10</td>
+        <td>16379</td>
+    </tr>
+
+    <tr>
+        <td><input type="checkbox" /></td>
+        <td>monitor-001</td>
+        <td>10.10.10.10</td>
+        <td>17379</td>
+    </tr>
+    </tbody>
+
+</table>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    // 全选
+    function CheckAll() {
+        //$('#tb1').find(':checkbox').attr('checked','checked');
+        $('#tb1').find(':checkbox').prop('checked',true);
+    }
+    // 反选
+    function CheckReverse() {
+        $('#tb1').find(':checkbox').each(function () {
+            //$(this).prop() 如果选中，true，否则false
+            //attr 如果选中，checked，checked=checked
+            if ($(this).prop('checked')){
+                $(this).prop('checked',false);
+            }else {
+                $(this).prop('checked',true);
+            }
+        })
+    }
+
+    // 取消选择
+    function CheckCancel() {
+        //$('#tb1').find(':checkbox').removeAttr('checked');
+        $('#tb1').find(':checkbox').prop('checked',false);
+    }
+</script>
+</body>
+</html>

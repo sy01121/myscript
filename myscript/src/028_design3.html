@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>鸭式辩型接口</title>
+    <script type="text/javascript" charset="utf-8">
+        // 实现接口的第三种方式：鸭式辨型法实现接口（最完美的javaScript实现接口方式）
+        // 注解描述法缺点：太过松散，接口跟方法是否实现都检测不出来；
+        // 属性检测法缺点：只能检测出所给的接口是否都实现了，接口里的方法是否实现任然检测不出
+        // 鸭式辨型法实现的核心：一个类实现接口的主要目的：把接口里的方法都实现（检测方法）
+        // 鸭式辨型法实现接口特点：完全面向对象  代码实现统一  解耦了
+
+        // 一： 接口类 Class Interface ===> 实例化N多个接口
+        /*
+        *  接口类需要2个参数（接口名称、方法名（由于接口方法名数量不固定，类参数直接name,method1,method2...）参数个数就不固定，麻烦）
+        *  解决：直接把接口方法名装进数组里一个参数就搞定
+        *  参数1：接口的名字(string)
+        *  参数2：接收方法名字的集合（数组）（array）
+        * */
+        var Interface = function (name,methods) {
+            // 判断接口的参数个数
+            if (arguments.length !== 2){
+                throw new Error('this instance interface constructor arguments must be 2 length!');
+            }
+            // 接口的名字一定是String类型，因此可以直接赋值
+            this.name = name;
+            // 接口方法名数组元素必须是String，但传入数组元素太多，参次不齐，需判断
+            // this.methods = methods;
+            this.methods = []; // 定义一个内置的空数组，等待接收methods里的元素（方法名字）
+            for (var i=0,len=methods.length;i<len;i++){
+                if (typeof methods[i] !== 'string'){
+                    throw new Error('the Interface method name is error!');
+                }
+                this.methods.push(methods[i]);
+            }
+        };
+
+        // 二：准备工作：
+
+        // 1 实例化接口对象
+        var CompositeInterface = new Interface('CompositeInterface',['add','remove']);
+        var FormItemInterface = new Interface('FormItemInterface',['update','select']);
+
+        // 2 具体实现类
+        // CompositeImpl implements CompositeInterface,FormItemInterface
+        var CompositeImpl = function () {
+
+        };
+
+        // implements methods
+        CompositeImpl.prototype.add = function (obj) {
+            alert('add');
+            // do something
+        };
+        CompositeImpl.prototype.remove = function (obj) {
+            alert('remove');
+            // do something
+        };
+        CompositeImpl.prototype.update = function (obj) {
+            alert('update');
+            // do something
+        };
+        CompositeImpl.prototype.select = function (obj) {
+            alert('select');
+            // do something
+        };
+
+        // 三： 检验接口里的方法
+        // 如果检验通过 不做任何操作 不通过：浏览器抛出异常（error）
+        // 这个方法的目的：就是检测方法的
+        // 直接接口的构造函数Interface上设置静态方法
+        Interface.ensureImplements = function (object) {
+            // 如果检测方法接收的参数小于2，只有一个参数或没有（只传入实现类的实例对象或不传），没有接口可检验，参数传递失败！
+            if(arguments.length < 2){
+                throw new Error('Interface.ensureImplements method constructor arguments must be >=2!');
+            }
+
+            // 获取接口实例对象,索引位置为0，是实现类实例对象无用，直接跳过
+            for (var i=1,len=arguments.length;i<len;i++){
+                var instanceInterface = arguments[i];
+                // 判断参数是不是接口类的类型(双重保险)
+                if (instanceInterface.constructor !== Interface){
+                    throw new Error('the arguments constructor not be Interface Class');
+                }
+                // 循环接口实例对象里的每一个方法
+                for (var j=0;j<instanceInterface.methods.length;j++){
+                    // 用一个临时变量 接收每一个方法的名字（注意是字符串）
+                    var methodName = instanceInterface.methods[j];
+                    // 用js特有的object[key] 方法
+                    if (!object[methodName] || (typeof object[methodName] !== 'function')){
+                        throw new Error('the method name '+methodName+' is not found!');
+                    }
+                }
+            }
+        };
+
+        // 检验
+        var c1 = new CompositeImpl();
+        Interface.ensureImplements(c1,CompositeInterface,FormItemInterface);
+        c1.add();  // add
+        var FormItemInterface = new Interface('FormItemInterface',['update','select','change']);
+        Interface.ensureImplements(c1,CompositeInterface,FormItemInterface);
+        c1.add();  // Uncaught Error: the method name change is not found!
+        /*
+        * 接口的利弊：
+         对于一些中小型程序来说 使用接口很显然是不明智的，对项目来说接口的好处也不明显，只是徒增其复杂度而已。
+         对于接口的好处，那么显而易见 首先促进代码的重用，
+         对于开发来讲，还可以告诉程序员那些类都使用了什么方法，如果你事先知道接口那么就减少了你在编码的时候对类与类之间冲突，实现解耦。
+         对于测试和调试也会变得轻松，用于javascript的弱类型语言，类型不匹配经常出现，那么使用接口，这一点会变得容易一些。
+        * */
+    </script>
+</head>
+<body>
+
+</body>
+</html>

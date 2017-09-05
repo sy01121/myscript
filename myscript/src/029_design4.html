@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单单体和闭包单体</title>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        * 单体（singleton）模式是javaScript中最基本但又最有用的模式之一，
+        * 它可能比其他任何模式都常用。
+        * 这种模式提供了一种将代码组织为一个逻辑单元的手段，
+        * 这个逻辑单元中的代码可以通过单一的变量进行访问。
+        * 通过确保单体对象只存在一份实例，
+        * 你就可以确信自己的所有代码使用的都是同样的全局资源。
+        * */
+        // 单体模式（singleton）
+        // 1 简单单体模式
+        /*
+        var Singleton = {
+            attr1: true,
+            attr2: 10,
+            method1: function () {
+                alert('我是方法1');
+            },
+            method2: function () {
+                alert('我是方法2');
+            }
+        };
+        alert(Singleton.attr1); // true
+        Singleton.method1(); // 我是方法1
+        */
+        // 补充：划分命名空间（区分代码）增强解耦性 类似Ext.Manager.attr1 / method1
+        // 团队合作的，设置自己的命名空间
+        /*
+        var BHX = {};
+        BHX.Singleton = {
+            attr1: true,
+            attr2: 10,
+            method1: function () {
+                alert('我是方法1');
+            },
+            method2: function () {
+                alert('我是方法2');
+            }
+        };
+        alert(BHX.Singleton.attr1);  // true
+        BHX.Singleton.method1();  // 我是方法1
+        */
+
+        // 2 借用闭包单体：闭包主要目的 保护数据（让程序更强壮）
+        // 命名空间
+        var BHX = {};
+        BHX.Singleton = (function () {
+            // 添加自己的私有成员
+            var a1 = true;
+            var a2 = 10;
+            var f1 = function () {
+              alert('f1');
+            };
+            var f2 = function () {
+                alert('f2');
+            };
+            // 把块级作用域的执行结果赋值给单体对象（目的就是把对象赋值给单体元素）
+            return {
+                attr1: a1,
+                attr2: a2,
+                method1: f1,
+                method2: function () {
+                    return f2();
+                }
+            };
+        })();
+
+        alert(BHX.Singleton.attr1);  // true
+        BHX.Singleton.method1();  // f1
+        BHX.Singleton.method2();  // f2
+    </script>
+</head>
+<body>
+
+</body>
+</html>

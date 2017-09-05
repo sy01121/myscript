@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text和html区别</title>
+</head>
+<body>
+<p id="test">测试段落<b>段落中比较重要的部分</b> 。</p>
+<button id="btn1">获取text值</button>
+<button id="btn2">获取html值</button>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="UTF-8">
+    $(function(){
+        // 点击显示纯文本
+        $("#btn1").click(function(){
+            alert("Text: " + $("#test").text());
+        });
+        // 点击显示所有内容：html标签+文本
+        $("#btn2").click(function(){
+            alert("HTML: " + $("#test").html());
+        });
+    });
+</script>
+</body>
+</html>

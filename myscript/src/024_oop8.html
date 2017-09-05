@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>oop8</title>
+    <script type="text/javascript" charset="utf-8">
+        // 原型继承
+        // 父类模型
+        /*
+        function Person(name,age) {
+            this.name = name;
+            this.age = age;
+        }
+        // 父类原型对象属性
+        Person.prototype.id = 10;
+        
+        // 子类
+        function Boy(sex) {
+            this.sex = sex;
+        }
+        // 继承已经实现 子类的原型 = 父类的实例
+        Boy.prototype = new Person('z3',20);
+        var b1 = new Boy();
+        alert(b1.name);  // z3
+        alert(b1.id);  // 10
+        */
+        // 原型继承的特点：既继承了父类的模板（构造函数），又继承了父类的原型对象
+        // 正常面向对象var b1 = new Boy('z3',20); 解决方法:使用类继承
+
+        // 类继承（只继承模板（构造函数））不继承原型对象 （借用父类构造函数的方式继承）
+        // 父类
+        /*
+        function Person(name,age) {
+            this.name = name;
+            this.age = age;
+        }
+        // 父类的原型对象属性
+        Person.prototype.id = 10;
+
+        // 子类
+//        function Boy(sex) {
+//            this.sex = sex;
+//        }
+//        var b = new Boy('z3',20,'男');
+//        alert(b.name);  // undefined
+//        alert(b.age);  // undefined
+//        alert(b.sex);  // z3
+        // 子类
+        function Boy(name,age,sex) {
+            // call apply
+            Person.call(this,name,age); // 借用父类构造函数执行
+            this.sex = sex;
+        }
+        var b = new Boy('z3',20,'男');
+        alert(b.name);  // z3
+        alert(b.age);  // 20
+        alert(b.sex);  // 男
+        alert(b.id);  // undefined 父类原型对象并没有继承
+        */
+        // 原型继承+构造函数继承 = 混合继承
+        // 父类
+        function Person(name,age) {
+            this.name = name;
+            this.age = age;
+        }
+        // 父类的原型对象属性
+        Person.prototype.id = 10;
+        Person.prototype.sayName = function () {
+          alert(this.name);
+        };
+
+        // 子类
+        function Boy(name,age,sex) {
+            // call apply(类执行)
+            Person.call(this,'z3',20); // 借用父类的构造函数执行
+            this.sex = sex;
+        }
+        // 原型继承
+        // new Person();不传参数不走父类模型（构造函数）
+        // 只剩下 （子类原型对象 = 父类的实例对象） 与父类原型对象之间的关系
+        Boy.prototype = new Person();
+        var b = new Boy('z3',20,'男');
+        alert(b.name);  // z3
+        alert(b.id);  // 10
+        b.sayName();  // z3
+    </script>
+</head>
+<body>
+
+</body>
+</html>

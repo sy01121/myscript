@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>js字符串的常用操作3</title>
+    <script type="text/javascript" charset="utf-8">
+        window.onload = function () {
+            /*
+            * 返回指定位置开始的指定长度的字符串，原字符串不变，
+            * 若第二个参数缺省就一直截取到字符串结束，
+            * 当传递的参数为负值时，方法会将负的第一个参数与字符串的长度相加，将负的第二个参数转化为0
+            *
+            * */
+            var s = 'hello world!';
+            alert(s.substr(0, 5)); //hello
+            alert(s.substr(7)); //orld!
+            alert(s.substr(-7,3));// wo
+            alert(s.substr(-7,-3));//''
+            /*
+            * 基于指定的分隔符将一个字符串分割成多个字符串，并将结果存放在一个数组中，
+            * 可以传两个参数，第一个参数为分隔符，第二个参数用于指定返回数组的大小，
+            * 若省略该参数，则返回整个数组
+            *
+            * */
+            var s1 = "1,23,45";
+            var arr1 = s1.split(",");
+            alert(arr1); //[1,23,45]
+            var arr2 = s1.split(",",2);
+            alert(arr2); //[1,23]
+            /*
+            * 删除元素前置及后缀的所有空格，然后返回结果，远数组不变
+            * */
+            var s2 = "      hello world   ";
+            var s3 = s2.trim();
+            alert(s2);//"      hello world   "
+            alert(s3);//"hello world"
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

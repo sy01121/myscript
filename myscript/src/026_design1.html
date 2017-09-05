@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注解描述接口</title>
+    <script type="text/javascript" charset="utf-8">
+        // javascript定义接口有三种方式
+
+        // 1 注释描述方式
+        // 优点：程序员可以有一个参考
+        // 缺点：还是属于文档范畴，这种方式太松散了，没有检查接口的方法是否完全实现
+        /*
+        *  interface Composite{
+        *       function add(obj);
+        *       function remove(obj);
+        *       function update(obj);
+        * */
+        // CompositeImpl implements Composite
+        // 直接量式
+        var CompositeImpl = function () {
+            // this.add = function (obj) {}
+        };
+        // var c1 = new CompositeImpl();
+        // var c2 = new CompositeImpl();
+        // alert(c1.add == c2.add); // false(比较耗费空间)
+        CompositeImpl.prototype.add = function (obj) {
+            // do something
+        };
+        CompositeImpl.prototype.remove = function (obj) {
+            // do something
+        };
+//        CompositeImpl.prototype.update = function (obj) {
+//            // do something
+//        };
+        var c1 = new CompositeImpl();
+        var c2 = new CompositeImpl();
+        alert(c1.add == c2.add); // true
+
+        // 2.属性检测接口
+        // 3.鸭式辩型接口
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>桥接模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        // 桥接模式：主要作用就是把抽象和现实分离开来，使他们可以完全独立变化
+
+        // 应用场景：事件监听回调机制（用户点击一个按钮，向服务器发送信息）
+
+        // jQuery准备函数：执行$()方法参数是函数fn
+        // 页面加载完后执行函数体 window.onload(优化后版本)
+        /*
+        // classic(基本的)
+        $(function () {
+            // 1.前台业务逻辑
+            var inp = document.getElementById('inp');
+            // 用事件注册方式，向元素上添加事件（希望有个方法往元素上添加事件）
+            SY.EventUtil.addHandler(inp,'click',sendReq);
+
+            //------------------------------------------
+            // 2.后台业务逻辑
+            // 处理后台的函数
+            function sendReq() {
+                // ajax
+                // $.post参数1：后台服务器的地址
+                // $.post参数2：是一个对象或一个字符串（参数）
+                // $.post('URL',{msg:this.value},function (result) {});
+                alert('发送了指定的数据到后台：'+this.value);
+            }
+        });
+        */
+        // 前台跟后台靠sendReq函数强耦合在一起,利用桥模式分开
+        $(function () {
+            // 1.前台业务逻辑：这一段代码处理前台的事件注册和绑定的
+            var inp = document.getElementById('inp');
+            // 用事件注册方式，向元素上添加事件（希望有个方法往元素上添加事件）
+            SY.EventUtil.addHandler(inp,'click',bridgeHandler);
+
+            // 利用桥模式分开(利用普通的函数)
+            function bridgeHandler() {
+                var msg = this.value;
+                sendReq(msg);
+            }
+
+            //------------------------------------------
+            // 2.后台业务逻辑：这一段代码处理后台发送请求的
+            // 处理后台的函数
+            function sendReq(msg) {
+                // ajax
+                // $.post参数1：后台服务器的地址
+                // $.post参数2：是一个对象或一个字符串（参数）
+                // $.post('URL',{msg:this.value},function (result) {});
+                alert('发送了指定的数据到后台：'+msg);
+            }
+
+            // 前后台逻辑分开了sendReq方法与inp元素上绑定的点击事件没有直接关系
+            // 利于单元测试：（可单独测试后台逻辑部分代码）后台逻辑代码可直接执行不必依赖前台点击逻辑
+            sendReq('我也是数据...');
+
+        });
+
+    </script>
+</head>
+<body>
+<input type="button" id="inp" value="我是数据...">
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>js定时器</title>
+</head>
+<body>
+<button type="button" id="start" onclick="startCounting()">点击开始计时</button>
+<input type="text" id="text">
+<button type="button" id="end" onclick="stopTimer()">点击停止计时</button>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    var time = 0,timer;
+    function startCounting() {
+        $('#text').val(time);
+        time += 1;
+        // 添加定时器
+        timer = setTimeout(startCounting,1000);
+    }
+    function stopTimer() {
+        // 清除定时器
+        clearTimeout(timer);
+    }
+</script>
+</body>
+</html>

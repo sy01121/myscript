@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>向HTML中追加元素</title>
+</head>
+<body>
+<p>测试文本1</p>
+<ol>
+    <li>列表项1</li>
+    <li>列表项2</li>
+    <li>列表项3</li>
+</ol>
+<button id="btn1">追加文本</button>
+<button id="btn2">追加列表项</button>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        var i = 3;
+        $('#btn1').click(function(){
+            $('p').append('<b>追加的测试文本</b>.');
+        });
+
+        $('#btn2').click(function(){
+            i +=1;
+            $('ol').append('<li>追加的列表项'+i+'</li>');
+        });
+    });
+</script>
+</body>
+</html>

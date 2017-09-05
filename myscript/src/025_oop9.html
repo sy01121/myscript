@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟extjs底层继承方式</title>
+    <script type="text/javascript" charset="utf-8">
+
+        function extend(sub,sup) {
+            // 目的：实现只继承父类的原型对象
+            var F = new Function(); // 1.创建一个空函数（类） 目的：空函数进行中转
+            F.prototype = sup.prototype; // 2.实现空函数的原型对象和父类原型对象的转换
+            // 目前F的地位与Person相同
+            sub.prototype = new F(); // 3.原型继承（目前子类的构造器是F）
+            sub.prototype.constructor = sub; // 4.还原子类构造器
+            // 保存一下父类的原型对象：一方面方便解耦 另一方面方便获得父类的原型对象
+            sub.superClass = sup.prototype; // 自定义一个子类的静态属性 接收父类的原型对象
+            //判断父类原型对象的构造器
+            if (sup.prototype.constructor == Object.prototype.constructor){
+                sup.prototype.constructor = sup; // 手动改变父类原型对象的构造器
+            }
+        }
+
+        // 混合继承：原型继承构造函数继承
+        // 父类构造函数
+        function Person(name,age) {
+            this.name = name;
+            this.age = age;
+        }
+        // 父类原型对象
+        Person.prototype = {
+            constructor: Person,
+            sayHello: function () {
+                alert('hello world!');
+            }
+        };
+
+        // 子类
+        /*
+         function Boy(name,age,sex) {
+         // call apply 完成借用父类构造函数继承：只继承了父类的模板
+         // Person.call(this,name,age);
+         this.sex = sex;
+         }
+         Boy.prototype = new Person();
+
+         var b = new Boy('张三',20,'男');
+         alert(b.name);  // undefined // Person函数执行了
+         alert(b.sex);  // 男
+
+         Boy.prototype = new Person('z3');
+
+         var b = new Boy('张三',20,'男');
+         alert(b.name);  // z3
+         alert(b.sex);  // 男
+         */
+
+        function Boy(name,age,sex) {
+            // call apply 完成借用父类构造函数继承：只继承了父类的模板
+            Boy.superClass.constructor.call(this,name,age); // 保存下父类的原型对象用于解耦
+            this.sex = sex;
+        }
+
+        // 原型继承的方式：既继承了父类的模板（构造函数），又继承了父类的原型对象
+        // new Person();没有传参数，没有函数入口，执行了无效
+        // Boy.prototype = new Person();
+        // 若Person函数中属性太多，虽然原型继承时不传入参数，但函数里面的代码都一一执行了，效率低
+        // 只继承1遍父类的原型对象，不进行父类模板的再次继承
+        extend(Boy,Person);// 参数谁跟谁之间产生继承关系
+
+        var b = new Boy('张三',20,'男');
+        alert(b.name);  // 张三
+        alert(b.sex);  // 男
+        b.sayHello();  // hello world!
+        // 混合继承的缺点：3件事：继承父类的2次模板(构造函数) 继承了1次父类的原型对象
+        // extend方法：继承1次父类的模板（构造函数）继承1次父类的原型对象
+        // 添加子类原型对象的方法
+        Boy.prototype.sayHello = function () {
+            alert('子类hello world！');
+        };
+        b.sayHello(); // 子类hello world！
+        // 保留子类原型对象方法的前提下，访问父类原型对象方法
+        Boy.superClass.constructor.call(b); // 子类hello world！
+    </script>
+</head>
+<body>
+
+</body>
+</html>

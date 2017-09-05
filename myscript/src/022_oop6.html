@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>oop6</title>
+    <script type="text/javascript" charset="utf-8">
+        // 原型的概念：原型对象里所有的属性和方法 被所有构造函数实例化的对象所共享
+        /*
+        function Person() {
+            
+        }
+        Person.prototype = {
+            name: 'z3',
+            age: 20,
+            job: '程序员',
+            friends: ['李四','王五'],
+            sayName: function () {
+                alert('我的名字！');
+            }
+        };
+        // 改变下原型对象的构造函数
+        Object.defineProperty(Person.prototype,'constructor',{
+            enumerable : false,
+            value : Person
+        });
+        var p1 = new Person();
+        var p2 = new Person();
+
+        p1.friends.push('赵六');
+        alert(p1.friends);  // 李四,王五,赵六
+        alert(p2.friends);  // 李四,王五,赵六
+        // 原型里的属性和方法 被所有属性共享：static（所有引用的指针都指向Person.prototype对象的属性里，一改都改）
+        */
+
+        // 解决方案：
+        // 组合使用原型和构造函数式（定义一个类 开发式最最常用的方式）
+        // 把不同的特性放在构造函数里，可随时改变，不影响其他对象
+        /*
+        function Person(name,age,friends,job) {
+            this.name = name;
+            this.age = age;
+            this.friends = friends;
+            this.job = job;
+        }
+        Person.prototype = {
+            sayName : function () {
+                alert(this.name);
+            }
+        };
+        Object.defineProperty(Person.prototype,'constructor',{
+            enumerable : false,
+            value : Person
+        });
+        var p1 = new Person('z3',20,['李四','王五','赵六'],'程序员');
+        var p2 = new Person('l4',25,['王五','赵六'],'boss');
+        p1.sayName();  // z3
+        alert(p1.friends);  // 李四,王五,赵六
+        p2.sayName();  // l4
+        alert(p2.friends);  // 王五,赵六
+        */
+        
+        // 动态原型模式：（让你的代码都封装在一起）
+        /*
+        function Person(name,age,friends,job) {
+           this.name = name;
+           this.age = age;
+           this.friends = friends;
+           this.job = job;
+           // 动态原型方法(构造函数Person的 typeof 为 Function)
+           // sayName只在 typeof this.sayName中声明了一次
+            if (typeof this.sayName !== 'function'){
+                Person.prototype.sayName = function () {
+                    alert(this.name);
+                }
+            }
+        }
+        var p1 = new Person('z3',20,['李四','王五'],'程序员');
+        p1.sayName(); // z3
+        */
+
+        // 稳妥构造函数式：durable object（稳妥对象）用在非常安全的环境中
+        // 特点：1.没有公共属性 2.不能使用this对象
+        function Person(name,age,job) {
+            //this.name = name;行不通
+            // 工厂模式 返回一个对象
+            var obj = new Object();
+            // 可以定义一下私有的变量和函数（局部变量）private
+            var name = name;
+            var sex = '男';
+            var saySex = function () {
+                alert(sex);
+            };
+            // 所有私有变量只能通过obj出去
+            obj.sayName = function () {
+                alert(name);
+            };
+            obj.saySex = saySex;
+            return obj;
+        }
+        var p1 = new Person('z3');
+        p1.sayName();  // z3
+        p1.saySex(); // 男
+    </script>
+</head>
+<body>
+
+</body>
+</html>

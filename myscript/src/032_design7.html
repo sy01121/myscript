@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟jquery底层代码实现1</title>
+    <script type="text/javascript" src="../commons/jQuery.js"></script>
+</head>
+<body>
+
+<input type="button" value="点击我" id="inp">
+
+<script type="text/javascript" charset="utf-8">
+
+    // jQuery 准备方法1
+    /*
+     $(function () {
+     // jQuery代码
+     });
+     */
+    // jQuery 准备方法2
+    $.onReady(function () {
+        // jQuery 代码
+        // alert('123');  // 123
+        // alert($); // [object Object]
+        // $('#id').addEvent().setStyle();
+        // alert($('#inp')); // [object Object]
+        // $('#inp').addEvent().setStyle(); // addEvent setStyle
+
+        var inp = $('#inp'); // 找到jQuery对象
+        // var domObj = inp.get(0); // 找到对应的dom对象(jQuery原来的方法)
+        // alert(inp.dom); // [object HTMLInputElement]
+        // alert(inp.dom.nodeName); // INPUT
+        inp.addEvent('click',function () {
+            alert('我被点击了！');
+        }).setStyle('backgroundColor','red');
+    });
+</script>
+</body>
+</html>

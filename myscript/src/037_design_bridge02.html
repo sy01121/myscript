@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>特权函数和实现独立化单元</title>
+    <script type="text/javascript" charset="UTF-8">
+        /*
+        * 桥的核心：为了让两段代码能够独立起来，做单元测试，
+        * 做其他的一些测试性操作时候，可以独立的运行，跟其他代码不产生任何解耦关系
+        * 桥模式2：特权函数
+        * */
+        /*
+        // 函数直接量的方式声明一个类（构造函数）
+        function PublicClass() {
+            // private variable(内部私有变量，只有内部环境能访问，实例对象也不能访问)
+            var name = '张三';
+            // 仿照 java getter方法 访问私有成员变量 // this.getName函数就是特权函数就是桥
+            // 对外的公开方法（getName）把内部私有成员变量（name）让外部能访问
+            this.getName = function () {
+                return name;
+            }
+        };
+        var p1 = new PublicClass();
+        alert(p1.getName()); // 张三
+        */
+
+        // 桥模式：用桥把多个单体组织在一起
+        // 使每个单元都能独立化，每个单元都可以实现自己的变化
+        var Class1 = function (a,b,c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
+        };
+        var Class2 = function (d,e) {
+            this.d = d;
+            this.e = e;
+        };
+        var BridgeClass = function (a,b,c,d,e) {
+            this.class1 = new Class1(a,b,c);
+            this.class2 = new Class2(d,e);
+        };
+        var bridgeClass = new BridgeClass(1,2,3,4,5);
+        // 用桥类BridgeClass把Class1和Class2单体类组合在一起，单体类里的元素都能访问a:1;b:2;c:3;d:4;e:5;
+        alert('a:'+bridgeClass.class1.a+';'+'b:'+bridgeClass.class1.b+';'+'c:'+bridgeClass.class1.c+';'+'d:'+bridgeClass.class2.d+';'+'e:'+bridgeClass.class2.e+';')
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

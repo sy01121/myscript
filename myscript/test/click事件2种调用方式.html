@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>click事件2种调用方式</title>
+</head>
+<body>
+<button type="button" id="but">点击实现第一种调用方式</button>
+<!-- click事件第二种调用方式 -->
+<button type="button" onclick="method2()">点击实现第二种调用方式</button>
+
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    function method1() {
+        alert('第一种点击事件的方法调用成功！');
+    }
+    function method2() {
+        alert('第二种点击事件的方法调用成功！');
+    }
+    // click事件第一种调用方式
+    $('#but').click(function () {
+        method1();
+    });
+</script>
+</body>
+</html>

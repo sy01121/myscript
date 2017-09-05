@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form表单中select部分常用操作2</title>
+</head>
+<body>
+<form>
+    <select id="selector">
+        <!-- 若不想直接传option里面的汉字进后台，可用value属性重新给option赋值，实现显示与后台取到的值不一致 -->
+        <!--  <option>值3</option> 不赋值留作对比 -->
+        <option value="0">值1</option>
+        <option value="1">值2</option>
+        <option>值3</option>
+        <option value="3">值4</option>
+        <option value="4">值5</option>
+        <option value="5">值6</option>
+    </select>
+    <!-- 设置button的 type="button"属性可以禁止button点击事件后刷新页面 -->
+    <button type="button" id="but1">点击获取select当前选中的值</button>
+</form>
+
+<!-- 引入在线jQuery插件 -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+    // 实现点击获取select当前选中的值
+    $('#but1').click(function () {
+        alert($('#selector').val());
+    });
+</script>
+</body>
+</html>

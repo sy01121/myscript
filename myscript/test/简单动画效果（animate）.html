@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单动画效果（animate）</title>
+    <style type="text/css">
+        .box{
+            width:100px;
+            height:100px;
+            /*position:absolute;*/
+            background:#98bf21;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<button>开始动画</button>
+<div class="box"></div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="UTF-8">
+    $(function(){
+        $("button").click(function(){
+            var div=$(".box");
+            div.animate({height:'300px',opacity:'0.4'},"slow");
+            div.animate({width:'300px',opacity:'0.8'},"slow");
+            div.animate({height:'100px',opacity:'0.4'},"slow");
+            div.animate({width:'100px',opacity:'0.8'},"slow");
+        });
+    });
+</script>
+</body>
+</html>

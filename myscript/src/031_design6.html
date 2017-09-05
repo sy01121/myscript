@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单的函数链式调用</title>
+    <script type="text/javascript" charset="utf-8">
+
+        // 1 简单的函数链式调用
+        function Dog() {
+            this.run = function () {
+                alert('dog is run...');
+                return this;
+            };
+            this.eat = function () {
+                alert('dog is eat...');
+                return this;
+            };
+            this.sleep = function () {
+                alert('dog is sleep...');
+                return this;
+            };
+        }
+        var d1 = new Dog();
+        // d1.run();  // dog is run...
+        // d1.eat();  // dog is eat...
+        // d1.sleep();  // dog is sleep...
+        // 函数链式调用（只有实例对象d1才能调用run() eat() sleep()方法，所以每个方法都把实例对象作为结果返回）
+        d1.run().eat().sleep(); // dog is run... dog is eat... dog is sleep...
+    </script>
+</head>
+<body>
+
+</body>
+</html>

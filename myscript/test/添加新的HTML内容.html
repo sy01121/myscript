@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加新的HTML内容</title>
+</head>
+<body>
+<p id="p1">测试文本1</p>
+<p id="p2">测试文本2</p>
+<p id="p3">测试文本3</p>
+<p id="p4">测试文本4</p>
+<button id="btn1">append结尾追加</button>
+<button id="btn2">prepend开头追加</button>
+<button id="btn3">after之后插入</button>
+<button id="btn4">before之前插入</button>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="UTF-8">
+    /*
+    * append() - 在被选元素的结尾插入内容
+    * prepend() - 在被选元素的开头插入内容
+    * after() - 在被选元素之后插入内容
+    * before() - 在被选元素之前插入内容
+    * */
+    $('#btn1').click(function () {
+        $('#p1').append('<b>追加文本1</b>');
+    });
+    $('#btn2').click(function () {
+        $('#p2').prepend('<b>追加文本2</b>');
+    });
+    $('#btn3').click(function () {
+        $('#p3').after('<p><b>追加文本3</b></p>');
+    });
+    $('#btn4').click(function () {
+        $('#p4').before('<p><b>追加文本4</b></p>');
+    });
+</script>
+</body>
+</html>

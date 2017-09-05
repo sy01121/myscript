@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>design</title>
+    <script type="text/javascript" charset="utf-8">
+        // 惰性单体（和闭包单体有一些相似的地方）
+        /*
+        * 闭包单体缺点：所有属性、方法都要遍历一遍，耗费内存大
+        * 惰性单体优点：设置私有变量，控制返回的单体对象（有选择的遍历需要的属性和方法，不必都遍历）
+        * */
+        // 命名空间
+        /*
+        var Ext = {};
+        Ext.Base = (function () {
+            // 私有变量 控制返回的单体对象
+            var uniqInstance; //undefined
+            var controlMethod; //undefined
+            // 需要一个构造器 init 初始化单体对象
+            function init() {
+                // 私有成员变量
+                var a1 = 10;
+                var a2 = true;
+                var fn1 = function () {
+                    alert('fn1');
+                };
+                var fn2 = function () {
+                    alert('fn2');
+                };
+                return {
+                    attr1: a1,
+                    attr2: a2,
+                    method1: function () {
+                        return fn1();
+                    },
+                    method2: function () {
+                        return fn2();
+                    }
+                }
+            }
+            function init1() {
+                // 私有成员变量
+                var fn1 = function () {
+                    alert('fn1');
+                };
+                var fn2 = function () {
+                    alert('fn2');
+                };
+                return {
+                    method1: function () {
+                        return fn1();
+                    },
+                    method2: function () {
+                        return fn2();
+                    }
+                }
+            }
+
+            return {
+                getInstance : function () {
+                    if (!uniqInstance){ // 如果不存在 创建单体实例
+                     uniqInstance = init();
+                    }
+                    return uniqInstance;
+                },
+                getInstance1 : function () {
+                    if (!controlMethod){ // 如果不存在 创建单体实例
+                        controlMethod = init1();
+                    }
+                    return controlMethod;
+                }
+            }
+        })();
+
+        alert(Ext.Base.getInstance()); // [object Object]
+        alert(Ext.Base.getInstance().attr1); // 10
+        Ext.Base.getInstance().method1(); // fn1
+        Ext.Base.getInstance1().method2(); // fn2
+        */
+
+        // 分支单体（判断程序分支《主要用于浏览器差异性检测》）(都是在闭包单体的基础上)
+        // 命名空间
+        var Ext = {};
+        // 用于判断的参数
+        var different = 2;
+        Ext.More = (function () {
+            var objA = { // 火狐浏览器 内部的一些配置
+                attr1: 'FF属性1'
+                // 属性1
+                // 属性2
+                // 方法1
+                // 方法2
+            };
+            var objB = { // IE浏览器 内部的一些配置
+                attr1: 'IE属性1'
+                // 属性1
+                // 属性2
+                // 方法1
+                // 方法2
+            };
+            // 判断函数
+            function judge() {
+                var o;
+                switch (different){
+                    case 1:
+                        o = objA;
+                        break;
+                    case 2:
+                        o = objB;
+                        break;
+                    default:
+                        o = objB;
+                }
+                return o;
+            }
+            return judge();
+        })();
+        alert(Ext.More.attr1); // IE属性1
+    </script>
+</head>
+<body>
+
+</body>
+</html>

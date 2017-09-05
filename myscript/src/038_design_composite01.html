@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>面向对象实现场景</title>
+    <script type="text/javascript" charset="UTF-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 组合模式：可以用一条命令在多个对象上激发复杂或递归的行为
+        // 组合模式好处：可以用同样的方法（org.hardworking()）处理对象的集合（Dept）与其中特定的子对象（Person）
+        /*
+        * 场景模拟：
+        * -> 公司
+        *       -> 财务部门
+        *               -> 张一
+        *               -> 张二
+        *               -> 张三
+        *       -> 销售部门
+        *               -> 张四
+        *               -> 张五
+        *               -> 张六
+        *       实际的任务具体是落实到人上去实施的，也就是说只有人才具有具体的方法
+        * */
+        // 公司的类
+        var Org = function (name) {
+            this.name = name;
+            // 分配个属性装公司下的部门
+            this.depts = [];
+        };
+        // 公司有增加部门方法+获取部门方法
+        Org.prototype = {
+            constructor : Org,
+            addDepts : function (child) {
+                this.depts.push(child);
+                // 实现链式调用的关键
+                return this;
+            },
+            getDepts : function () {
+                return this.depts;
+            }
+        };
+        // 部门的类
+        var Dept = function (name) {
+            this.name = name;
+            // 同理部门下分配个属性装部门的人
+            this.persons = [];
+        };
+        // 部门有增加员工+获取员工的方法
+        Dept.prototype = {
+            constructor : Dept,
+            addPersons : function (child) {
+                this.persons.push(child);
+                // 实现链式调用的关键
+                return this;
+            },
+            getPersons : function () {
+                return this.persons;
+            }
+        };
+        // 人的类
+        var Person = function (name) {
+            this.name = name;
+        };
+        // 人实施具体的任务（方法）
+        Person.prototype = {
+            constructor : Person,
+            hardworking : function () {
+                alert(this.name+'...努力工作！');
+            },
+            sleeping : function () {
+                alert(this.name+'...努力睡觉！');
+            }
+        };
+        // 想办法把：Org->Dept->Person三个类关联起来(公司里增加部门，部门里增加人员，连接在一起)
+
+        // 造人
+        var p1 = new Person('张一');
+        var p2 = new Person('张二');
+        var p3 = new Person('张三');
+        var p4 = new Person('张四');
+        var p5 = new Person('张五');
+        var p6 = new Person('张六');
+
+        // 造部门
+        var dept1 = new Dept('财务部');
+        // 部门招人
+        dept1.addPersons(p1).addPersons(p2).addPersons(p3);
+        // 造部门
+        var dept2 = new Dept('销售部');
+        // 部门招人
+        dept2.addPersons(p4).addPersons(p5).addPersons(p6);
+
+        // 造公司
+        var org = new Org('beige');
+        // 公司加部门
+        org.addDepts(dept1).addDepts(dept2);
+
+        // 安排任务：具体让一个人（张三）去努力工作(从公司到部门到人一级级找)
+        // 理想状态：org.hardworking('财务部') org.hardworking('张四')都能直接执行（组合模式）
+//        for(var i=0,depts = org.getDepts(); i<depts.length; i++){
+//            for (var j=0,persons=depts[i].getPersons(); j<persons.length; j++){
+//                if(persons[j].name === '张三'){
+//                    persons[j].hardworking(); // 张三...努力工作！
+//                }
+//            }
+//        }
+        for(var i=0,depts = org.depts; i<depts.length; i++){
+            for (var j=0,persons=depts[i].persons; j<persons.length; j++){
+                if(persons[j].name === '张三'){
+                    persons[j].hardworking(); // 张三...努力工作！
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form表单中select部分常用操作</title>
+</head>
+<body>
+<form>
+    <select id="selector">
+        <option>值1</option>
+        <option>值2</option>
+        <option>值3</option>
+        <option>值4</option>
+        <option>值5</option>
+        <option>值6</option>
+    </select>
+    <!-- 设置button的 type="button"属性可以禁止button点击事件后刷新页面 -->
+    <button type="button" id="but1">点击禁止select下拉</button>
+    <button type="button" id="but2">点击恢复select下拉</button>
+</form>
+
+<!-- 引入在线jQuery插件 -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+
+    // 实现点击禁止select下拉
+    $('#but1').click(function () {
+        $('#selector').attr('disabled','disabled');
+    });
+
+    // 实现点击恢复select下拉
+    $('#but2').click(function () {
+        $('#selector').removeAttr('disabled');
+    });
+
+    // select值改变时，获取select当前的选中值（前提：要恢复select下拉）
+    $('#selector').change(function () {
+        alert($(this).val());
+    });
+</script>
+</body>
+</html>

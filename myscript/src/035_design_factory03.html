@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单工厂模式1</title>
+    <script type="text/javascript" charset="UTF-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        // 细粒度（类似精确搜索）和 粗粒度（类似模糊全局搜索）
+        // 面向对象（万事万物都是Object）：
+        // 继续细化：你要买什么车？就去什么商店 ——> 卖车的商店 ——> 卖车 ——> 生产车 ——> Factory
+
+        // 搭建一个工厂环境（细粒度，方便解耦，方便检查哪个环节出了问题造车？卖车？）
+        // 卖车的商店可能有：奥迪4S店 奔驰4S店 宝马4S店
+
+        // 卖车的商店 Super Shop 卖车的公共方法
+        // abstract Class == ? Java的抽象类()特点：只能被继承，不能被实例化
+        // this CarShop is a abstract Class
+        function CarShop() {}
+        CarShop.prototype = {
+            constructor : CarShop,
+            // 返回一个要卖的车对象
+            sellCar : function (type) {
+                // 1.销售人员。。。（介绍车型）
+                // 2.顾客相中车型，通知工厂根据车型造车
+                // var car = CarFactory.createCar(type);
+                // 3.车辆要提供保险、相关的售后服务
+                // return car;
+                // 4. 一切准备就绪就可以将车卖出去了
+                // 抽象方法不能调用，只能子类重写
+                this.abstractSellCar(type);
+            },
+            abstractSellCar : function () {
+                throw new Error('this method is abstract...');
+            }
+        };
+
+        // Benz 4s 店
+        function BenzCarShop() {}
+        SY.extend(BenzCarShop,CarShop);
+        // 方法重写：所有BenzCarShop实例对象的sellCar方法都要重写
+        BenzCarShop.prototype = {
+            constructor : BenzCarShop,
+            sellCar : function (type) {
+                var car; // 声明一个变量（卖车肯定最后的卖辆车出来）
+                var types = ['Benz','Benz200']; // 所有Benz类型的车
+                // 判断4s店里有没有你想买的车型
+                for (t in types){
+                    // 如果我的商店有你想要的汽车型号
+                    if(types[t] === type){
+                        car = CarFactory.createCar(type);
+                        return car;
+                    } else {
+                        // 报错 直接退出程序
+                        throw new Error('There is no model of the car you want！');
+                    }
+                }
+            }
+        };
+
+        // Bmw 4s 店
+        function BmwCarShop() {}
+        SY.extend(BmwCarShop,CarShop);
+        // 方法重写：所有BenzCarShop实例对象的sellCar方法都要重写
+        BmwCarShop.prototype = {
+            constructor : BmwCarShop,
+            sellCar : function (type) {
+                var car; // 声明一个变量（卖车肯定最后的卖辆车出来）
+                var types = ['Bmw','Bmw200']; // 所有Bmw类型的车
+                // 判断4s店里有没有你想买的车型
+                for (t in types){
+                    // 如果我的商店有你想要的汽车型号
+                    if(types[t] === type){
+                        car = CarFactory.createCar(type);
+                        return car;
+                    } else {
+                        // 报错 直接退出程序
+                        throw new Error('There is no model of the car you want！');
+                    }
+                }
+            }
+        };
+
+
+        // 生产车的工厂 ： 目的就是为了生产车
+        // 简单单体 动态工厂模式
+        /*
+         * 单体（singleton）模式是javascript中最基本但又最有用的模式之一，它可能比其他任何模式都常用。
+         这种模式提供了一种将代码组织为一个逻辑单元的手段，这个逻辑单元中的代码可以通过单一的变量进行访问。
+         通过确保单体对象只存在一份实例，你就可以确信自己的所有代码使用的都是同样的全局资源。
+         * */
+        var CarFactory = {
+            createCar : function (type) {
+                var car; // 声明一个变量，用于新造出的车辆
+                // 利用eval动态创建传入类型的实例对象
+                car = eval('new '+type+'()');
+                // 车出厂之前，先检测下车接口的所有方法都实现没
+                SY.Interface.ensureImplements(car,CarInterface);
+                return car;
+            }
+        };
+
+        // 都是车，具有相同的方法，比如启动，行走（做个车的接口）
+        var CarInterface = new SY.Interface('CarInterface',['start','run']);
+        // 建一个父类实现所有车共同的方法（['start','run']），让其他车型继承
+        // SuperClass implements CarInterface
+        function BaseCar() {}
+        // 简单原型实现接口方法
+        BaseCar.prototype = {
+            constructor : BaseCar,
+            start : function () {
+                alert(this.constructor.name+'...start');
+            },
+            run : function () {
+                alert(this.constructor.name+'...run');
+            }
+        };
+
+        // Class benz bmw audi（都是车）用不同车型类实现车接口
+        // 注意关键问题：必须子类先继承父类，子类再扩展子类自己特有的方法
+
+        function Benz() {}
+        SY.extend(Benz,BaseCar);
+        // 子类自己特有的方法
+        Benz.prototype.driveBenz = function () {
+            alert('Benz...drive');
+        };
+        //        Benz.prototype.start = function () {
+        //            alert('Benz...start');
+        //        };
+        //        Benz.prototype.run = function () {
+        //            alert('Benz...run');
+        //        };
+        // 先让子类扩展自己特殊的方法，再让子类继承父类
+        // 调用实例对象的driveBenz方法，报错：Uncaught TypeError: car.driveBenz is not a function）
+        // 原因.extend方法：中 sub.prototype = new F(); 子类的原型被重新覆盖赋值，Benz.prototype.driveBenz方法丢失
+        // SY.extend(Benz,BaseCar);
+
+        function Bmw() {}
+        SY.extend(Bmw,BaseCar);
+        Bmw.prototype.driveBmw = function () {
+            alert('Bmw...drive');
+        };
+        //        Bmw.prototype.start = function () {
+        //            alert('Bmw...start');
+        //        };
+        //        Bmw.prototype.run = function () {
+        //            alert('Bmw...run');
+        //        };
+
+        function Audi() {}
+        SY.extend(Audi,BaseCar);
+        Audi.prototype.driveAudi = function () {
+            alert('Audi...drive');
+        };
+        //        Audi.prototype.start = function () {
+        //            alert('Audi...start');
+        //        };
+        //        Audi.prototype.run = function () {
+        //            alert('Audi...run');
+        //        };
+
+        // 创建真实的卖车商店出来
+        /*
+        var shop = new CarShop();
+        var car = shop.sellCar('Benz'); // Uncaught Error: this method is abstract...
+        car.start();  // Benz...start
+        car.run();  // Benz...run
+        car.driveBenz(); // Benz...drive
+        // var car1 = shop.sellCar('bieke'); // Uncaught Error: not buy it
+        */
+
+        var shop1 = new BenzCarShop();
+        var car1 = shop1.sellCar('Benz');
+        car1.run();
+
+        var shop2 = new BmwCarShop();
+        var car2 = shop2.sellCar('Bmw');
+        car2.run();
+        var car20 = shop2.sellCar('Benz');
+        car20.run();  // Uncaught Error: There is no model of the car you want！
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

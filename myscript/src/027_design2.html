@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>属性检测接口</title>
+    <script type="text/javascript" charset="utf-8">
+
+        // 第二种实现接口的方式 属性检测的方式
+        // 缺点：
+        /*
+        *  interface Composite {
+        *       function add(obj);
+        *       function remove(obj);
+        *       function update(obj);
+        * }
+        *   interface FormItem{
+        *        function select(obj);
+        *   }
+        *
+        * */
+        // CompositeImpl implements Composite,FormItem
+        var CompositeImpl = function () {
+            // 显式的在类的内部 接收所实现的接口
+            // 一般来说是一个规范 我们项目经理：在类的内部定义一个数组（名字要固定）
+            this.implementsInterfaces = ['Composite','FormItem'];
+        };
+        CompositeImpl.prototype.add = function (obj) {
+          // do something...
+            alert('add...');
+        };
+        CompositeImpl.prototype.remove = function (obj) {
+            // do something...
+        };
+        CompositeImpl.prototype.update = function (obj) {
+            // do something...
+        };
+        CompositeImpl.prototype.select = function (obj) {
+            // do something...
+        };
+
+        // 检测CompositeImpl类的实例对象
+        function CheckCompositeImpl(instance) {
+            // 判断当前对象是否实现了所有的接口
+            if (!IsImplements(instance,'Composite','FormItem')){
+                // 抛出异常
+                throw new Error('Object dose not implement a required interface!');
+            }
+        }
+        // 公用的具体方法（核心方法） 返回值类型boolean
+        // 这个方法的主要目的：就是判断 实例对象 有没有实现相关的接口
+        function IsImplements(object) {
+            // arguments 对象 获得函数实际传入的参数
+            for (var i = 1;i<arguments.length;i++){ // var i = 1 略过 实例对象 参数
+                // 接收所实现每个接口的名字
+                var interfaceName = arguments[i];
+                // 判断此方法是成功还是失败（默认false）类似开关
+                var interfaceFound = false;
+                // 与CompositeImpl类中，自定义的接收接口的数组里的值一一对比
+                for (var j = 0;j<object.implementsInterfaces.length;j++){
+                    if (object.implementsInterfaces[j] == interfaceName){
+                        interfaceFound = true;
+                        // 跳出整个for（j）循环
+                        break;
+                    }
+                }
+                if(!interfaceFound){
+                    return false;
+                }
+            }
+            return true;
+        }
+        var c1 = new CompositeImpl();
+        CheckCompositeImpl(c1);
+        c1.add();  // add... 成功
+        c1.implementsInterfaces = ['Composite'];
+        CheckCompositeImpl(c1);  // Uncaught Error: Object dose not implement a required interface!
+        c1.add();  // 失败 什么也弹不出
+    </script>
+</head>
+<body>
+
+</body>
+</html>

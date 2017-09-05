@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>js字符串的常用操作2</title>
+    <script type="text/javascript" charset="utf-8">
+        window.onload = function () {
+            // 将一个或多个字符串拼接起来，返回拼接到的新的字符串，原字符串不变
+            var str1 = 'hello ';
+            var res = str1.concat('world','!');
+            alert(res);  // hello world!
+            /*
+            * 返回被操作字符的子字符串，原字符串不变，接受两个参数，字符串的起始位置和结束位置，返回的字符串不包含结束位置的字符，
+            * 第一个参数要小于第二个参数，否则返回"",
+            * 若只有一个参数，返回起始位置到字符串结尾的所有字符串，
+            * 若传递的参数为负数，将传入的负值与字符创的长度相加
+            *
+            * */
+            var str = 'hello world!';
+            alert(str.slice(3,7));  //lo w
+            alert(str.slice(3));  //lo world!
+            alert(str.slice(9,5));  //""
+            alert(str.slice(-7,-3)); // wor
+            alert(str.slice(5,9));  // wor
+
+            /*
+            * 当传入的参数是正数时，substring与slice的功能基本相同，
+            * 唯一的区别是当第一个参数大于第二个参数时，方法将第二个参数作为截取的起始位置而将第一个参数作为截取结束的位置，且截取的字符串不包含第一个参数位置对应的值，
+            * 当传入的参数是负值时，该方法会将所有的负值转化为0
+            * */
+            alert(str.substring(3,7));//lo w
+            alert(str.substring(3));//lo world!
+            alert(str.substring(9,5));// wor
+            alert(str.substring(-7,-3));//""
+            alert(str.substring(-7,3));//hel
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
