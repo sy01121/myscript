@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>门面模式</title>
+    <script type="text/javascript" charset="UTF-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        * 门面模式（facade）一般有2个作用：
+        *   简化类的接口
+        *   消除类与使用它的客户代码之间的耦合
+        * */
+        // 门面模式的概念：简化API接口 最经典的就是事件（其他浏览器直接调用封装好的addHandler的方法，无需理会方法内部实现）
+        /*
+         * 单体模式
+         * 实现一个跨浏览器的元素添加事件程序（一套方法：添加事件；移除事件）
+         * */
+        /*
+        SY.EventUtil = {
+            addHandler : function (element,type,handler) {
+                if (element.addEventListener){   //FF
+                    // 事件有两种型式：冒泡型事件（IE） 捕获型事件（FF）
+                    // .addEventListener()第三个false含义：将 FF的 捕获型事件改为 IE的 冒泡型事件
+                    element.addEventListener(type,handler,false);
+                }else if(element.attachEvent){   //IE
+                    element.attachEvent('on'+type,handler);
+                }
+            },
+            removeHandler : function (element,type,handler) {
+                if (element.removeEventListener){   //FF
+                    // 事件有两种型式：冒泡型事件（IE） 捕获型事件（FF）
+                    // .addEventListener()第三个false含义：将 FF的 捕获型事件改为 IE的 冒泡型事件
+                    element.removeEventListener(type,handler,false);
+                }else if(element.detachEvent){   //IE
+                    element.detachEvent('on'+type,handler);
+                }
+            }
+        };
+        */
+        // 做一件事情：必须要调用2个函数a,b(一个不落都要调用才能完成)
+        /*
+        function a(x) {
+            // do something
+        }
+        function b(y) {
+            // do something
+        }
+        // 平时两个方法都要调用，麻烦
+        // 整合一起,只调用ab方法就行
+        function ab(x,y) {
+            a(x);
+            b(y);
+        }
+        */
+        
+        // 现在有个简单的需求：获得页面上的元素 给得到的元素设置css样式
+        window.onload = function () {
+            // 给一个元素设置一个样式
+            /*
+            // 1.获取元素
+            var element = document.getElementById('div1');
+            // 2.给得到的元素设置css样式
+            element.style.color = 'red';
+            */
+            // 给多个元素设置同样的一个样式
+            setStyle(['div1','div2','div3'],'color','blue');
+            // 给多个元素设置同样的多个样式
+            setCss(['div1','div2','div3'],{
+                background : 'green',
+                color : '#fff',
+                fontSize : '18px'
+            });
+        };
+        // 需求发生改变：同时给多个元素设置同一个css样式（默认复制获取元素+设置css代码多遍，太麻烦）
+        // 简单门面模式
+        function setStyle(elementsId,prop,val) {
+            // 通过ID获取元素，获得元素的id数组
+            for (var i=0;i<elementsId.length;i++){
+                document.getElementById(elementsId[i]).style[prop] = val;
+            }
+        }
+        // 门面模式的css方法,elementsId多个元素的id数组，多个css属性与值键值对，用数组展示最合适
+        function setCss(elementsId,options) {
+            for (var prop in options){
+                // 判断属性是否是对象本身的
+                if (!options.hasOwnProperty(prop)) continue;
+                setStyle(elementsId,prop,options[prop]);
+            }
+        }
+        /*
+        * 门面模式的目的是为了让开发人员用更简单的方法调用一些相对复杂或组合的方法，
+        * 主要就是简化开发的复杂性，
+        * 提供一个相对容易的API去调用内部的方法供外界去使用，
+        * 这样程序开发会变得轻松些，编写一个组合代码后可以反复的去使用它，
+        * 有助于节省时间和精力
+        *
+        * 注意：不要滥用门面模式，所以使用你心仪的门面之前一定要三思，搞不好就会小题大作
+        * */
+    </script>
+</head>
+<body>
+<div id="div1">我是div1</div>
+<div id="div2">我是div2</div>
+<div id="div3">我是div3</div>
+</body>
+</html>
