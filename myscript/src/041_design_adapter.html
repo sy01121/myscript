@@ -4,9 +4,125 @@
     <meta charset="UTF-8">
     <title>适配器模式</title>
     <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
-    <script type="text/javascript" charset="UTF-8"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 适配器：日常生活中 老式台式机电脑的鼠标键盘 PS2 圆形接口 连接
+        // 后来换了新电脑 鼠标键盘的接口都是usb的，想接着用旧的圆形接口鼠标键盘
+        // 需要：<------ps2-to-usb------> 既有圆形接口的线，又有usb的线适配器 连接（圆口的）鼠标和键盘
+        // 程序中：简单的适配器
+        // 旧版本中
+        /*
+        var obj = {                       // 鼠标和键盘（圆口）
+            str1 : '111',
+            str2 : '222',
+            str3 : '333'
+        };
+        // 适配器方法
+        function adapter(obj) {
+            interfaceMethod(obj.str1,obj.str2,obj.str3);
+        }
+        // 新版本 （usb接口的新电脑）直接用obj.str1 obj.str2 obj.str3属性值作为：interfaceMethod方法的3个参数
+        function interfaceMethod(x,y,z) {
+            alert(x+';'+y+';'+z);
+            // 更复杂的操作
+        }
+        adapter(obj); // 111;222;333
+        */
+
+        // 企业开发中：javaScript库（extjs,jquery,yui,prototype...ded...）
+        // 紧急项目开发遇到难题：公司有部分YAHOO开发人员 一部分Prototype开发人员（框架难以抉择）
+        // 用YAHOO开发Prototype程序员需重新学习YAHOO，用Prototype开发一样，时间不允许
+
+        // 项目经理决定：用YAHOO框架开发（注意：我们用雅虎的框架，但是Prototype程序员该怎么写代码，还怎么写代码就行啦）
+        // 分别模拟YAHOO与Prototype两种框架根据id获取指定的dom元素
+        // Prototype $ function（不需要传递任何参数）
+        function $() {
+            // 找到的dom对象要找个数组存放
+            var doms = [];
+            // 获取传入的实参并遍历
+            for (var i=0;i<arguments.length;i++){
+                var parameter = arguments[i];
+                if(typeof parameter == 'string'){
+                    var dom = document.getElementById(parameter);
+                }
+                // 一般框架返回dom元素的规则：一个dom元素直接返回，多个dom元素返回dom元素的数组
+                if (arguments.length == 1){
+                    return dom;
+                }
+                doms.push(dom);
+            }
+            return doms;
+        }
+
+        // YUI get function (只能传递一个参数：类型不是字符串，就是数组)
+        // 声明个作用域
+        var YAHOO = {};
+        // 正常YAHOO get方法调用 YAHOO.util.*.get(我们没有中间类似util的类，直接YAHOO.get)
+        YAHOO.get = function (el) {
+            // el 只有两种类型：string 和 Array（所以：首先判断类型）
+            if (typeof el == 'string'){
+                return document.getElementById(el);
+            }
+            if (el instanceof Array){
+                // 多个dom对象用数组盛装
+                var doms = [];
+                for (var i=0;i<el.length;i++){
+                    // 数组遍历后变成单个参数，递归调用YAHOO.get方法传入数组单个元素，判断是否是string，返回单个dom对象
+                    // doms[doms.length]巧妙的利用索引比length少1的特性赋值
+                    doms[doms.length] = YAHOO.get(el[i]);
+                }
+                return doms;
+            }
+            if (el){
+                return el;
+            }
+            return null;
+        };
+
+        // 产品经理熬夜重写YUI get 方法（让Prototype开发人员用自己的习惯写）
+        YAHOO.get  = YUIToPrototypeAdapter;
+        function YUIToPrototypeAdapter() {
+            // 对YUI开发人员来说 永远传递一个参数
+            if (arguments.length == 1){
+                // 理论上：只传递一个参数可直接调用YAHOO.get方法，但YUIToPrototypeAdapter已经赋值给YAHOO.get方法调用自身会进入递归死循环
+                var e = arguments[0];
+                // $ 方法是定义在window环境中的，在window环境中执行即可
+                return $.apply(window,e instanceof Array ? e:[e]);
+            } else {
+                return $.apply(window,arguments);
+            }
+        }
+
+        // 测试
+        window.onload = function () {
+            // Prototype开发人员习惯用法
+            /*
+            var dom1 = $('inp1');
+            alert(dom1);  // [object HTMLInputElement]
+            var domarr = $('inp1','inp2');
+            alert(domarr);  // [object HTMLInputElement],[object HTMLInputElement]
+            */
+
+            // YUI开发人员习惯写法
+            /*
+            var dom1 = YAHOO.get('inp1');
+            alert(dom1); // [object HTMLInputElement]
+            var domarr = YAHOO.get(['inp1','inp2']);
+            alert(domarr); // [object HTMLInputElement],[object HTMLInputElement]
+            */
+
+            // YUI 我是一个Prototype 用项目经理的说法写（单个dom对象获取无差别，就看获得多个dom对象，能否都用YAHOO.get方法）
+            var dom = YAHOO.get('inp1');
+            alert(dom); // [object HTMLInputElement]
+            var domarr1 = YAHOO.get(['inp1','inp2']);
+            alert(domarr1); // [object HTMLInputElement],[object HTMLInputElement]
+            var domarr2 = YAHOO.get('inp1','inp2');
+            alert(domarr2); // [object HTMLInputElement],[object HTMLInputElement]
+            // 成功！！！
+        }
+    </script>
 </head>
 <body>
-
+<input type="text" id="inp1">
+<input type="text" id="inp2">
 </body>
 </html>
