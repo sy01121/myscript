@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>装饰者模式</title>
+    <script type="text/javascript" charset="UTF-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 装饰者模式：就是在保证不改变原始对象的基础上，去自由的扩展一些想要的需求和方法
+
+        /*
+        * 装饰者：（decorator）是一种为对象添加新特性的技术，它并不适用于创建新子类的这种手段。
+        * 装饰者模式可以用来透明的把原始实例对象包装在具有同样接口的另一个对象之中。
+        * 这样我们就可以为对象添加一个方法或者一些行为，然后将方法传递给原始对象。
+        * */
+        // 装饰者模式的创建：
+        // 1.实现同样的接口
+        // 2.需要有子类
+        // 汽车类要实现的接口
+        /*
+        var CarInterface = new SY.Interface('CarInterface',['getPrice','assemble']);
+        // 建立汽车类(传入原始父类对象的实例对象，并存到car属性上)
+        var Car = function (car) {
+            // 就是为了让子类继承（让子类有个父类实例对象的引用）
+            this.car = car;
+            // 顺便检验下实例对象(子类 父类)是否实现了接口方法
+            SY.Interface.ensureImplements(this,CarInterface);
+        };
+        // 简单原型实现接口
+        Car.prototype = {
+            constructor : Car,
+            getPrice : function () {
+                return 200000;
+            },
+            assemble : function () {
+                document.write('组装汽车...');
+            }
+        };
+         */
+        //新的需求：light（换车灯）、icebox（车载冰箱）。。。getPrice、assemble都要改变
+        // 传统方法：
+        /*
+        var LightCar = function () {};
+        // 继承
+        SY.extend(LightCar,Car);
+        // 重写方法(简单原型)
+        LightCar.prototype = {
+            constructor:LightCar,
+            getPrice : function () {
+                // 直接改变价格数值，首先你要知道父类的价格才能在父类价格200000的基础上增加10000，不合理：
+                // 只知道父类+父类方法里面具体细节不知道（黑匣子模式下），无法这样写（失败）
+                return 210000;
+            },
+            assemble : function () {
+                document.write('组装车灯...');
+            }
+        };
+        var car1 = new Car();
+        alert(car1.getPrice());  // 200000
+        car1.assemble();  // 组装汽车...
+        var lightCar1 = new LightCar();
+        alert(lightCar1.getPrice());  // 210000
+        lightCar1.assemble();  // 组装车灯...
+        */
+        // 装饰者模式
+        /*
+        var LightDecorator = function (car) {
+            // 借用构造函数继承（继承完后：this.car就是父类实例对象的引用，因此父类本身实例化对象无需传参）
+            LightDecorator.superClass.constructor.call(this,car); // call绑定下
+        };
+        // 原型继承
+        SY.extend(LightDecorator,Car);
+        // 实现同样的接口（简单原型方法）
+        LightDecorator.prototype = {
+            constructor : LightDecorator,
+            getPrice : function () {
+                // 想办法调用父类的getPrice，取得原始价格值
+                return this.car.getPrice()+10000;
+            },
+            assemble : function () {
+                document.write('组装车灯...');
+            }
+        };
+
+        // 装车载冰箱
+        var IceBoxDecorator = function (car) {
+            // 借用构造函数继承
+            IceBoxDecorator.superClass.constructor.call(this,car);
+        };
+        // 原型继承
+        SY.extend(IceBoxDecorator,Car);
+        // 实现同样的接口（重写方法）简单原型
+        IceBoxDecorator.prototype = {
+            constructor : IceBoxDecorator,
+            getPrice : function () {
+                return this.car.getPrice()+20000;
+            },
+            assemble : function () {
+                document.write('组装车载冰箱...');
+            }
+        };
+        // 测试
+        var car = new Car();
+        alert(car.getPrice()); // 200000
+        car.assemble(); // 组装汽车...
+
+        // 在原来车上改装（无需实例化新车）(省掉改车灯、改车载冰箱任何一个环节都可以执行)
+        car = new LightDecorator(car);
+        alert(car.getPrice()); // 210000
+        car.assemble();  // 组装车灯...
+
+        car = new IceBoxDecorator(car);
+        alert(car.getPrice()); // 组装车载冰箱...
+        car.assemble(); // 230000
+        */
+
+        // 装饰器 不仅能用在类上 还能用在函数上
+        // 返回一个表示当前时间的字符串表示形式
+        function getData() {
+            return new Date().toString();
+        }
+
+        alert(getData()); // Wed Sep 13 2017 12:05:05 GMT+0800 (中国标准时间)
+
+        // 增加需求：让返回当前时间字符串全部大写
+        // 包装函数（装饰器函数）
+        function upperCaseDecorator(fn) {
+            return function () {
+                // arguments数组，所以用apply
+                return fn.apply(this,arguments).toUpperCase();
+            }
+        }
+
+        var getDecratorDate = upperCaseDecorator(getData);
+        alert(getDecratorDate()); // WED SEP 13 2017 12:42:25 GMT+0800 (中国标准时间)
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>localStorage</title>
+    <script type="text/javascript" charset="utf-8">
+        /*
+        * 优点：
+        * 1.localStorage属于永久性存储，sessionStorage属于当会话结束的时候，sessionStorage中的键值对会被清空
+        * 2.localStorage中一般浏览器支持的是5M大小，解决了cookie存储空间不足的问题(cookie中每条cookie的存储空间为4k)
+        * */
+
+        // 一：localStorage写入与读取的3种方式(官方推荐的是getItem\setItem这两种方法对其进行存取)
+        if (!window.localStorage){
+            alert('您的浏览器不支持localStorage');
+        } else {
+            var storage = window.localStorage;
+            // 写入方式1
+            storage['a'] = 1;
+            // 写入方式2
+            storage.b = 2;
+            // 写入方式3
+            storage.setItem('c',3);
+            console.log(storage); // Storage {a: "1", b: "2", c: "3", length: 3}
+            // 读取方式1
+            var a = storage['a'];
+            console.log(a); // 1
+            // 读取方式2
+            var b = storage.b;
+            console.log(b); // 2
+            // 读取方式3
+            var c = storage.getItem('c');
+            console.log(c); // 3
+            // 更改Storage对象中属性的值
+            storage['a'] = 4;
+            console.log(storage['a']);  // 4
+            storage.b = 5;
+            console.log(storage.b); // 5
+            // localStorage中的某个键值对删除
+            console.log(storage['a']); // 4
+            storage.removeItem('a');
+            console.log(storage['a']); // undefined
+            // localStorage所有内容清空
+            console.log(storage); // Storage {b: "5", c: "3", length: 2}
+            storage.clear();
+            console.log(storage); // Storage {length: 0}
+            // 二：localStorage其他注意事项
+            // 目前所有的浏览器中都会把localStorage的值类型限定为string类型，这个在对我们日常比较常见的JSON对象类型需要一些转换
+            storage.b = 2;
+            console.log(typeof storage.b); // string
+            var data = {
+                name:'xiecanyong',
+                sex:'man',
+                hobby:'program'
+            };
+            // 传入localStorage前要使用JSON.stringify()这个方法，来将JSON转换成为JSON字符串
+            var JSONString = JSON.stringify(data);
+            storage.setItem('data',JSONString);
+            console.log(storage.data);// {"name":"xiecanyong","sex":"man","hobby":"program"}
+            console.log(typeof storage.data); // string
+            // 读取使用要将JSON字符串转换成为JSON对象，使用JSON.parse()方法
+            var json = storage.getItem('data');
+            var jsonObj = JSON.parse(json);
+            console.log(jsonObj); // Object {name: "xiecanyong", sex: "man", hobby: "program"}
+            console.log(typeof jsonObj);  // object
+            // 三：用key()方法取出键
+            for (var i=0;i<storage.length;i++){
+                var key = storage.key(i);
+                console.log(key); // b ------- data
+            }
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
