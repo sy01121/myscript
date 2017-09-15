@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>享元设计模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 享元模式：优化的设计模式（优化：时间[代码的运行时间]; 空间[web浏览器内存]）
+        // 享元模式：（有两个虚拟的概念）内在数据static（出厂商、型号、出厂日期（这些信息固定不可变））
+        //                            外在数据（拥有着、车牌号、最近登记日期（这些信息随时可变动））
+
+        // 以车的类为例（包含属性：出厂商、型号、出厂日期、拥有着、车牌号、最近登记日期）
+        var Car = function (make,model,year,owner,tag,renewDate) {
+            this.make = make;
+            this.model = model;
+            this.year = year;
+            this.owner = owner;
+            this.tag = tag;
+            this.renewDate = renewDate;
+        };
+        // 简单原型实现车的方法
+        Car.prototype = {
+            constructor : Car,
+            getMake : function () {
+                return this.make;
+            },
+            getModel : function () {
+                return this.model;
+            },
+            getYear : function () {
+                return this.year;
+            },
+            renewRegistration : function (newRenewDate) {
+                this.renewDate = newRenewDate;
+            }
+        };
+
+        // 实际生产环境：要生产500W辆相同的车
+        // 建个数组装生产出来的车
+        var carArr = [];
+        // 用程序运行时间测试性能
+        var startTime = new Date();
+        for (var i=0;i<5000000;i++){
+            // runtime: 1437ms  web:多了3MB
+            carArr.push(new Car('上海大众','迈腾','2012-02-03','sy','鲁Y12345','2013=04-01'));
+        }
+        var endTime = new Date();
+        // 程序运行时间
+        alert(endTime-startTime);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

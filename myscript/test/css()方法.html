@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>css()方法</title>
+    <style type="text/css" rel="stylesheet">
+        p{
+            background-color:#ff0000;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        $(function () {
+            // 获取css样式
+            $('#btn1').click(function () {
+                var css = $('p').css('background-color');
+                alert('p元素的背景色为：'+css);
+            });
+            $('#btn2').click(function () {
+                $('h2').css('background-color','yellow');
+            });
+        })
+    </script>
+</head>
+<body>
+<h2>测试标题</h2>
+<p>测试段落1。</p>
+<button id="btn1">获取p元素的css</button>
+<button id="btn2">设置h的css</button>
+</body>
+</html>
