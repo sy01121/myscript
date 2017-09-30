@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5留痕的命令模式模拟</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 命令模式是一种封装方法调用的方式
+        // 命令模式的目的：把调用命令的调用者 和 执行命令的接收者 耦合度降低
+        /*
+        * N次命令：up up up left left down down
+        * 把这7次命令 存到 命令集合里
+        * 回退2次后[up up up left left]
+        * 当点击回退按钮的时候 原始集合命令.pop();
+        * 就是从原始位置开始执行命令集合
+        * 这次画的不是图形，而是画竖线
+        * html：lineTo 画线
+        * fillStyle：给一个图形填充颜色的
+        * strokeStyle：给一个线去填充颜色的
+        * 现在咱们有历史路径了：
+        * 开始路径的方法：beginPath
+        * 确定位置：moveTo 移动的位置
+        * 画线的方法：（描边：stroke方法）
+        * */
+
+        /*
+         *  game implementation code
+         * */
+        // 命令模式要有命令接口 只要一个执行命令的接口就行
+        var ReversibleCommandInterface = new SY.Interface('ReversibleCommandInterface',['execute']);
+
+        // 分别创建4个命令:命令对象的类 参数传递的是执行者（接收者cursor）
+        // 4个命令类中：把原来的undo方法都去掉
+        var MoveUp = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveUp.prototype = {
+            constructor : MoveUp,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(0,-10);
+            }
+        };
+
+        var MoveDown = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveDown.prototype = {
+            constructor : MoveDown,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(0,10);
+            }
+        };
+
+        var MoveLeft = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveLeft.prototype = {
+            constructor : MoveLeft,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(-10,0);
+            }
+        };
+
+        var MoveRight = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveRight.prototype = {
+            constructor : MoveRight,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(10,0);
+            }
+        };
+
+        // 接收者（也就是操作具体方法的元素对象）// HTML5 + ECMA5
+        var Cursor = function (width,height,parent) {
+            // 宽高代表外层的DIV（canvas画布）
+            this.width = width;
+            this.height = height;
+
+            // 在内部增加一个属性：命令集合
+            this.commandStack = [];
+            // HTML5新特新：canvas（画布的意义）
+            this.canvas = document.createElement('canvas');
+            // 首先把画布的宽高设定上
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+            // 添加到parent上
+            parent.appendChild(this.canvas);
+
+            // canvas 上下文元素（画布的核心对象相当于画布的画笔）
+            this.ctx = this.canvas.getContext('2d');
+            this.ctx.strokeStyle = 'red'; // 填充颜色
+            this.move(0,0); // 初始化执行者的位置
+        };
+        // 简单原型实现执行者的move方法
+        Cursor.prototype = {
+            constructor : Cursor,
+            // move只需要把 当前命令对象方法（函数形式）加入到 命令集合中
+            move : function (x,y) {
+                var that = this;
+                // 在执行命令之前（真正画线之前）先保留画线函数
+                this.commandStack.push(function () {
+                    that.lineTo(x,y);
+                });
+                // 执行命令
+                this.executeCommands();
+            },
+            // lineTo方法：才是真正的画线方法
+            lineTo : function (x,y) {
+                this.position.x +=x;
+                this.position.y +=y;
+                // 真正的画线方法
+                this.ctx.lineTo(this.position.x,this.position.y);
+            },
+            // 真正执行命令集合的方法
+            executeCommands : function () {
+                // 确定初始位置
+                this.position = {
+                    x : this.width/2,
+                    y : this.height/2
+                };
+                // 清空当前画布
+                this.ctx.clearRect(0,0,this.width,this.height);
+                // 开始执行描绘路径的方法
+                this.ctx.beginPath();
+                // 确定当前画笔的位置
+                this.ctx.moveTo(this.position.x,this.position.y);
+                // 循环遍历commandStack，每一个元素都是一个函数 都可以执行
+                for(var i=0; i<this.commandStack.length;i++){
+                    this.commandStack[i]();
+                }
+                // 描边方法
+                this.ctx.stroke();
+            },
+            // 回退命令的方法
+            undo : function () {
+                // 移除最后一次函数命令即可
+                this.commandStack.pop();
+                // 调用执行方法 重新重头画出commandStack剩余的命令
+                this.executeCommands();
+            }
+
+        };
+
+       // 装饰者不需要了 因为：原来装饰者作用在原命令类的基础上将命令实例对象追加到命令集合上
+       // 命令集合已经在 就接受者（cursor）类里了（内置属性），追加步骤也放在了接受者（cursor）类的move方法里
+
+        // 用js代码完善一下HTML元素即可（四个按钮[命令按钮]、回退按钮）
+
+        // 命令按钮类(按钮名称、按钮绑定什么命令、按钮元素追加到什么元素上)
+        var CommandButton = function (label,command,parent) {
+            // 检验传入的命令是否能实现命令接口（是否是合法的命令类实例对象）
+            SY.Interface.ensureImplements(command,ReversibleCommandInterface);
+            // 实例化按钮 并放到父元素上
+            this.element = document.createElement('button');
+            this.element.innerHTML = label;
+            parent.appendChild(this.element);
+            // 实例化按钮要绑定click事件
+            SY.EventUtil.addHandler(this.element,'click',function () {
+                command.execute(); // 执行该按钮绑定的命令
+            })
+        };
+
+        // 回退按钮类(重要参数是：命令集合（undoStack）从里面依次取出命令回退)
+        // 参数变化：传递的第三个参数cursor 接收者
+        var UndoButton = function (label,parent,cursor) {
+            // 实例化按钮 并放到父元素上
+            this.element = document.createElement('button');
+            this.element.innerHTML = label;
+            parent.appendChild(this.element);
+            // 绑定click事件
+            SY.EventUtil.addHandler(this.element,'click',function () {
+                // 直接调用接收者的回退方法即可
+                cursor.undo();
+            })
+        };
+
+        window.onload = function () {
+            var body = document.getElementsByTagName('body')[0];
+            var cursor = new Cursor(400,400,body);
+
+            // 客户：创建命令 创建本来命令类就好
+            var upCommand = new MoveUp(cursor);
+            var downCommand = new MoveDown(cursor);
+            var leftCommand = new MoveLeft(cursor);
+            var rightCommand = new MoveRight(cursor);
+
+            // 创建按钮（实例化按钮对象）
+            var upbtn = new CommandButton('up',upCommand,body);
+            var downbtn = new CommandButton('down',downCommand,body);
+            var leftbtn = new CommandButton('left',leftCommand,body);
+            var rightbtn = new CommandButton('right',rightCommand,body);
+
+            // 实例化回退按钮
+            var ubtn = new UndoButton('undo',body,cursor);
+
+        };
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

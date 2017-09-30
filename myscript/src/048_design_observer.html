@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>观察者模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 观察者模式：对程序中的某一个对象进行实时的观察，当该对象的状态发生变化时，进行通知
+        // 观察者模式有两个重要的对象：观察者、被观察者
+        // 经典案例：订报纸（报社[发布者]、订阅者）
+
+        // 报社[发布者]（被观察者）被（订阅者）盯着，啥时候发布报纸新闻啊
+        var Publish = function (name) {
+            this.name = name;
+            // 接收所有的订阅者（每一个元素都是函数类型fn）数组
+            this.subscribers = [];
+        };
+
+        // Publish类的实例对象去发布消息的方法
+        Publish.prototype.deliver = function (news) {
+            // this指代：谁调用deliver方法就是指代谁（Publish的实例对象）
+            var publish = this;
+            // 消息要发布给每一个订阅者（遍历订阅者）
+            // .forEach遍历数组每一个元素并让每一个元素执行一个函数function(item,index,array){}
+            publish.subscribers.forEach(function (fn) {
+                // 将报社发布的新消息发送给一个订阅者(订阅者还要区分是哪个报社发布的)
+                // 观察者模式的关键所在：被观察者发布消息，所有绑定的观察者要有所动作
+                fn(news,publish);
+            });
+            return this; // 链式调用（能发布多条新消息）
+        };
+
+        // 订阅者（订阅报纸+取消订阅）两个方法（订阅者是函数类型，扩展方法找函数的原型对象）
+        Function.prototype.subscribe = function (publish) {  // 订阅哪家报社的，作为参数传入
+            // this指代：订阅者调用订阅方法，sub取得具体订阅者这个人：例如：z3
+            var sub = this;
+            // 找到所有订阅这家报社的人：例如[z4,z5,z6,z7,z8,z3]
+            // some方法：循环遍历数组每一个元素，执行一个函数，只要其中有一个返回true，那么整体返回true
+            var alreadyExists = publish.subscribers.some(function (item) {
+                return item === sub;
+            });
+            // 如果当前出版社不存在这个人 则将其加入
+            if (!alreadyExists){
+                publish.subscribers.push(sub);
+            }
+            return this; // 链式编程，可以订阅多家报社
+        };
+
+        // 类似：具体一个订阅者去取消订阅的方法
+        Function.prototype.unsubscribe = function (publish) {
+            // this指代：订阅者调用取消订阅方法，sub取得具体订阅者这个人：例如：z3
+            var sub = this;
+            // 找到所有订阅这家报社的人：例如[z4,z5,z6,z7,z8,z3]
+            // filter方法：循环遍历数组的每一个元素，执行一个函数如果不匹配，则删除该元素，返回删除不匹配元素的新数组
+            publish.subscribers = publish.subscribers.filter(function (item) {
+                return item !== sub;
+            });
+            return this; // 链式调用，可以取消订阅多家报社
+        };
+
+        window.onload = function () {
+            // 实例化发布者对象（报社对象，被观察者）
+            var pub1 = new Publish('第一报社');
+            var pub2 = new Publish('第二报社');
+            var pub3 = new Publish('第三报社');
+
+            // 观察者（订阅者）
+            var sub1 = function (news) {
+                document.getElementById('sub1').innerHTML += arguments[1].name+':'+news+'\n';
+            };
+            var sub2 = function (news) {
+                document.getElementById('sub2').innerHTML += arguments[1].name+':'+news+'\n';
+            };
+
+            // 订阅者调用下订阅报纸方法
+            sub1.subscribe(pub1).subscribe(pub2).subscribe(pub3);
+            sub2.subscribe(pub1).subscribe(pub2);
+
+            // 绑定事件（点击“按钮”，报社发布消息）
+            SY.EventUtil.addHandler(document.getElementById('pub1'),'click',function () {
+                pub1.deliver(document.getElementById('text1').value);
+            });
+            SY.EventUtil.addHandler(document.getElementById('pub2'),'click',function () {
+                pub2.deliver(document.getElementById('text2').value);
+            });
+            SY.EventUtil.addHandler(document.getElementById('pub3'),'click',function () {
+                pub3.deliver(document.getElementById('text3').value);
+            });
+
+            // 订阅者调用取消订阅方法
+            sub1.unsubscribe(pub2);
+
+            /*
+            * 观察者模式作用：观察者模式是一种管理人与任务之间关系的得力助手！
+            * 人（报纸订阅者）观察 任务（报社发布信息/任务）：报社一发布消息，所绑定的观察者（订阅者）就会收到消息
+            * */
+        }
+    </script>
+</head>
+<body>
+
+<!-- 报社+消息 -->
+<input type="button" id="pub1" value="第一报社"><input type="text" id="text1" value=""><br>
+<input type="button" id="pub2" value="第二报社"><input type="text" id="text2" value=""><br>
+<input type="button" id="pub3" value="第三报社"><input type="text" id="text3" value=""><br>
+
+<!-- 具体订阅的人 -->
+<textarea id="sub1" rows="5" cols="30"></textarea>
+<textarea id="sub2" rows="5" cols="30"></textarea>
+
+</body>
+</html>

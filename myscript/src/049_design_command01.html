@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>命令模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 命令模式是一种封装方法调用的方式
+        // 命令模式的目的：把调用命令的调用者 和 执行命令的接收者 耦合度降低
+        // 例如：要执行一件事：要执行 1方法  2方法  3方法 那就把这些方法分别封装成 1（命令1） 2（命令2） 3（命令3）
+        // 命令模式必须实现接口（一般实现：execute 执行方法）：目的是为了检测命令对象是否实现了相应的操作
+        // 命令模式分类：简单命令模式、复杂命令模式（食物）：不常用、用闭包去处理命令模式（更加灵活的调用命令）
+
+        // 命令接口
+        var CommandInterface = SY.Interface('CommandInterface',['execute']);
+
+        // 需求：有一个按钮 点击按钮 触发几个元素去执行一些动画效果
+        // 需求里含有2个命令：（1：start）（2：stop）
+
+        // 命令模式的只要概念：调用者只需要执行相应的命令即可，不需要关心命令到底怎么实现的
+        //                   执行者它才真正的去处理这条命令的内部实现
+
+        // 开始用类分别封装两个命令：（用直接量方式声明类）
+
+        /* 简单命令模式
+         var StartCommand = function (obj) {  // obj(触发的元素)
+         this.ad = obj;
+         // 检验execute接口方法是否实现
+         SY.Interface.ensureImplements(this,CommandInterface);
+         };
+         // 在StartCommand类原型上实现接口方法
+         StartCommand.prototype.execute = function () {
+         this.ad.start();
+         };
+
+         var StopCommand = function (obj) {  // obj(触发的元素)
+         this.ad = obj;
+         // 检验execute接口方法是否实现
+         SY.Interface.ensureImplements(this,CommandInterface);
+         };
+         // 在StartCommand类原型上实现接口方法
+         StopCommand.prototype.execute = function () {
+         this.ad.stop();
+         };
+
+         // 要创建 执行命令
+         var startCommand = new StartCommand(obj);
+         // 调用者调用命令，不用管命令方法里的如：start()具体执行
+         startCommand.execute();
+         var stopCommand = new StartCommand(obj);
+         stopCommand.execute();
+         */
+
+        // 闭包命令模式（函数声明的方式）（优点：安全、灵活）
+        function MakeStart(obj) {  // 函数名首字母大写是类：需要实例化
+            return function () {
+                obj.start();
+            }
+        }
+        function MakeStop(obj) {
+            return function () {
+                obj.stop();
+            }
+        }
+
+        // 创建 执行命令
+        var startCommand = new MakeStart(obj);
+        startCommand(); // 命令开启
+        var stopCommand = new MakeStop(obj);
+        stopCommand(); // 命令结束了
+
+        // 客户（去实例化对象）、调用者（实例出来的对象：startCommand）、接收者（obj）（三者之间的关系）
+        // 客户创建命令 调用者调用命令 接收者在命令执行时进行相应的操作
+    </script>
+</head>
+<body>
+
+</body>
+</html>

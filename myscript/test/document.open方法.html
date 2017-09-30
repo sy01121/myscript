@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>document.open方法</title>
+    <script type="text/javascript">
+        /*
+        *  document.open(mimetype,replace)方法可打开一个新文档，并擦除当前文档的内容。
+        *  重要事项：调用 open() 方法打开一个新文档并且用 write() 方法设置文档内容后，必须记住用 close 方法关闭文档，并迫使其内容显示出来。
+        *
+        * */
+        function createNewDoc() {
+            var newDom = document.open('text/html','replace');
+            var txt = '<html><body>新写入的文档！</body></html>';
+            newDom.write(txt);
+            newDom.close();
+        }
+    </script>
+</head>
+<body>
+
+<input type="button" value="写入新文档" onclick="createNewDoc()">
+
+</body>
+</html>

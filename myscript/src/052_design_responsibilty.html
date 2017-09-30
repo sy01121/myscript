@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>责任链模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 责任链模式：responsibility
+        // 目的：降低 发出者 与接收者之间的耦合度
+        // 角色：发出者、接受者
+        /*
+        * 发送者知道链中第一个接受者，它向这个接收者发出请求
+        * 每一个接受者都对请求进行分析，要么处理他，要么往下传递
+        * 每个接收者知道的其他对象只有一个，即它的下家对象
+        * 如果没有任何接受者处理请求，那么请求将从链上离开，不同的实现对此有不同的反应。
+        * */
+
+        // 模拟场景：做项目->项目经理->发布任务（task）给->项目组[小A，小B，小C，小D]（其中只有一个人擅长此项任务）
+
+        // 1.任务类（发出者）
+        var Assign = function (task) {
+            // 保存下任务类型
+            this.task = task;
+        };
+        // 3.接收任务的类（在 发出者 与 接受者 之间起到衔接作用 接收任务 判断 谁可以做 好像 项目经理）
+        var WorkFlow = function (assign) {
+            this.assign = assign;
+        };
+        // 拿到任务判断项目组哪个成员可以做
+        WorkFlow.prototype = {
+            constructor : WorkFlow,
+            // 分析当前任务到底谁能执行(挨个拿出项目组成员进行判断，因此项目组成员数组作为参数传入)
+            filterHandler : function (es) {
+                // 如果当前这个任务刚好有人比较擅长，那就直接执行
+                // es.length找个临时参数len传入，作为缓存，不必买，每次循环都重新计算es的长度，利于代码优化
+                for(var i=0,len=es.length;i<len;i++){
+                    if (this.assign.task === es[i].cando){
+                        return es[i].todo();
+                    }
+                }
+                // 如果没有任何人擅长，就从请求链上离开
+                return ;
+            }
+        };
+        // 2.接受者（处理者）项目组员[小A，小B，小C，小D](姓名、能做的任务 两个属性)
+        var Executor = function (name,cando) {
+            this.name = name; // 接受者姓名
+            this.cando = cando; // 擅长的任务
+        };
+        // 既然擅长这个任务就去做（简单原型实现“做任务”的方法）
+        Executor.prototype = {
+            constructor : Executor,
+            todo : function () {
+                document.write(this.name+'去开发：'+this.cando);
+            }
+        };
+
+        // 实例化4个处理对象（组员）
+        var e1 = new Executor('小A','javascript编程');
+        var e2 = new Executor('小B','css编程');
+        var e3 = new Executor('小C','java编程');
+        var e4 = new Executor('小D','sql编程');
+
+        // 实例化任务对象
+        var assign = new Assign('css编程');
+
+        // 处理任务类的实例（项目经理：接到任务，判断指派给谁）
+        var wf = new WorkFlow(assign);
+        // 判断下任务指派给谁
+        wf.filterHandler([e1,e2,e3,e4]);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

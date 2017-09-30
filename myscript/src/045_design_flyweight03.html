@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟web日历</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 享元模式：优化的设计模式（优化：时间[代码的运行时间]; 空间[web浏览器内存]）web日历（......）
+        // 年对象、月对象、日对象（之间的关系：年对象包含月对象 月对象包含年对象）
+        // 所有日历对象（年对象、月对象、日对象）都要实现的接口
+        var CalendarInterface = new SY.Interface('CalendarInterface',['display']);
+
+        // 年类
+        var CalendarYear = function (year,parent) {
+            this.year = year;
+            //创建一个自己的容器盛装月份
+            this.element = document.createElement('div');
+            // 容器首先隐藏
+            this.element.style.display = 'none';
+            parent.appendChild(this.element);
+            // 判断是否是闰年
+            var isLeapYear = function (y) {
+                return (y>0) && !(y%4) && ((y%100)||!(y%400));
+            };
+            // 年对象里应该包含月份
+            this.months = [];
+            // 盛装当前年所有月份到底有多少天
+            this.numDays = [31,isLeapYear(this.year)?29:28,31,30,31,30,31,31,30,31,30,31];
+            for (var i=0;i<12;i++){
+                // 对应的月份对象放进去
+                this.months[i]= new CalendarMonth(i,this.numDays[i],this.element);
+            }
+            // 检验日历接口是否实现
+            SY.Interface.ensureImplements(this,CalendarInterface);
+        };
+        // 简单原型实现日历接口
+        CalendarYear.prototype = {
+            constructor : CalendarYear,
+            display : function () {
+                for (var i=0;i<this.months.length;i++){
+                    this.months[i].display();
+                }
+                // 显示出来月份
+                this.element.style.display = 'block';
+            }
+        };
+        // 月类
+        var CalendarMonth = function (monthNum,numDays,parent) {
+            this.monthNum = monthNum;
+            // 创建一个自己的容器盛装天
+            this.element = document.createElement('div');
+            // 先隐藏
+            this.element.style.display = 'none';
+            parent.appendChild(this.element);
+            // 月对象里应该包含天
+            this.days = [];
+            for (var i=0;i<numDays;i++){
+                this.days[i] = new CalendarDay(i+1,this.element);
+            }
+            // 检验日历接口是否实现
+            SY.Interface.ensureImplements(this,CalendarInterface);
+        };
+        // 简单原型实现接口
+        CalendarMonth.prototype = {
+            constructor : CalendarMonth,
+            display : function () {
+                for (var i=0;i<this.days.length;i++){
+                    this.days[i].display();
+                }
+                // 显示出来天
+                this.element.style.display = 'block';
+            }
+        };
+        // 天类
+        var CalendarDay = function (date,parent) {
+            this.date = date;
+            // 创建一个自己的容器盛装自己
+            this.element = document.createElement('div');
+            // 开始隐藏
+            this.element.style.display = 'none';
+            parent.appendChild(this.element);
+            // 检验日历接口是否实现
+            SY.Interface.ensureImplements(this,CalendarInterface);
+        };
+        // 简单原型实现接口
+        CalendarDay.prototype = {
+            constructor: CalendarDay,
+            display: function () {
+                this.element.style.display = 'inline-block'; // 不换行
+                this.element.innerHTML = this.date;
+            }
+        };
+
+        // 测试
+        window.onload = function () {
+            var mydiv = document.getElementById('mydiv');
+            var myyear = new CalendarYear(2017,mydiv);
+            // 实例了365个天对象出来（效率低）
+            myyear.display();
+        }
+    </script>
+</head>
+<body>
+<div id="mydiv"></div>
+</body>
+</html>

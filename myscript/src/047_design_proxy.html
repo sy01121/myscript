@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>代理模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        /*
+        * 代理模式：代理（proxy）是一个对象，它可以用来控制对一个对象的访问。
+        * 它与另外那个对象实现了同样的接口，并且会把任何方法调用传递到那个对象。
+        * 代理模式最基本的形式是对访问的控制。代理对象和另一个对象（实体）实现同样的接口，
+        * 实际上工作还是本体在做，它才是负责执行分派任务的那个对象或类，
+        * 代理对象所做的不外乎节制对本体的访问，它不会添加方法或修改方法（如装饰者），
+        * 也不会简化接口（如门面元素）。
+        * 它实行的接口与本体完全相同，所对它进行的方法调用会被传递给本体
+        * */
+
+        // 代理模式（proxy）：代理也是对象，它的目的就是为了节制（控制）对本体对象的访问
+
+        // 图书馆（本体对象，实例化图书馆需要耗费很多资源）
+        // 图书馆需要实现的接口
+        var LibraryInterface = new SY.Interface('LibraryInterface',['addbook','findbook','checkoutbook','returnbook']);
+        // 有图书馆，就要有书类
+        var Book = function (id,title,author) {
+            this.id = id;
+            this.title = title;
+            this.author = author;
+        };
+        var Library = function (books) {
+            this.books = books;
+            // 检验图书馆接口方法是否实现
+            SY.Interface.ensureImplements(this,LibraryInterface);
+        };
+        // 简单原型实现图书馆接口方法
+        Library.prototype = {
+            constructor : Library,
+            addbook : function (book) {
+                this.books[book.id] = book;
+            },
+            findbook : function (id) {
+                if(this.books[id]){
+                    return this.books[id];
+                }
+                return null;
+            },
+            checkoutbook : function (id) {
+                // 电脑登记...交押金
+                return this.findbook(id);
+            },
+            returnbook : function (book) {
+                // 电脑登记（...已还）
+                // 计算费用（在押金中扣除费用，计算余额）
+                this.books[book.id] = book;
+            }
+        };
+
+        // 图书馆代理对象
+        var LibraryProxy = function (books) {
+            alert('产生代理对象，但是并没有产生真正的本体对象！');
+            this.books = books;
+            // 添加引用连接本体（Library）实例对象
+            this.library = null; // 定义一个空对象
+            // 检查图书馆代理对象有没有实现接口方法
+            SY.Interface.ensureImplements(this,LibraryInterface);
+        };
+        // 代理对象和本体对象实现同样的接口方法，但对代理对象的方法调用要传给本体，代理对象不做实际性操作
+        // 简单原型实现接口方法
+        LibraryProxy.prototype = {
+            constructor : LibraryProxy,
+            // addbook findbook checkoutbook returnbook方法实现要调用本体对象的方法，因此要实例化（初始化）本体对象
+            initializeLibrary : function () {
+                if (this.library == null){
+                    alert('产生真正的本体对象！');
+                    this.library = new Library(this.books);
+                }
+            },
+            addbook : function (book) {
+                this.initializeLibrary();
+                this.library.addbook(book);
+            },
+            findbook : function (id) {
+                this.initializeLibrary();
+                return this.library.findbook(id);
+            },
+            checkoutbook : function (id) {
+                this.initializeLibrary();
+                return this.findbook(id);
+            },
+            returnbook : function (book) {
+                this.initializeLibrary();
+                this.library.returnbook(book);
+            }
+        };
+
+        // 实例化的是代理对象：推迟本体对象实例化的时间，什么时候具体去做事情了，再去实例化它
+        // eg:  hibernate: get(全查询出来) load（返回代理对象）
+        // 测试
+        var proxy = new LibraryProxy({
+            '01' : new Book('01','java','z3'),
+            '02' : new Book('02','js','z4')
+        });
+
+        alert(proxy.findbook('01').title);
+        alert(proxy.findbook('02').author);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

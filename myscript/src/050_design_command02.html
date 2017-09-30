@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>命令模式</title>
+    <script type="text/javascript" charset="utf-8" src="../commons/CommonUtil.js"></script>
+    <script type="text/javascript" charset="UTF-8">
+        // 命令模式是一种封装方法调用的方式
+        // 命令模式的目的：把调用命令的调用者 和 执行命令的接收者 耦合度降低
+        // 例如：要执行一件事：要执行 1方法  2方法  3方法 那就把这些方法分别封装成 1（命令1） 2（命令2） 3（命令3）
+        // 命令模式必须实现接口（一般实现：execute 执行方法）：目的是为了检测命令对象是否实现了相应的操作
+        // 命令模式分类：简单命令模式、复杂命令模式（食物）：不常用、用闭包去处理命令模式（更加灵活的调用命令）
+        // 客户（去实例化对象）、调用者（实例出来的对象：startCommand）、接收者（obj）（三者之间的关系）
+        // 客户创建命令 调用者调用命令 接收者在命令执行时进行相应的操作
+
+        // 用命令模式实现简单的小游戏
+        // 页面上有四个按钮（up、down、left、right） 目标对象（元素div...）还有一个关键的按钮（回退按钮）
+        // 我现在有一个元素 要执行4个命令：up、down、left、right，应该有一个集合去记录执行过的所有命令 回退：反方向执行相应的undo命令
+
+        /*
+        *  game implementation code
+        * */
+        // 命令模式要有命令接口 有两个方法 一个是执行命令 一个是回退命令
+        var ReversibleCommandInterface = new SY.Interface('ReversibleCommandInterface',['execute','undo']);
+
+        // 分别创建4个命令:命令对象的类 参数传递的是执行者（接收者cursor）
+        var MoveUp = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveUp.prototype = {
+            constructor : MoveUp,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(0,-10);
+            },
+            undo : function () {
+                // 反方向移回来
+                this.cursor.move(0,10);
+            }
+        };
+
+        var MoveDown = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveDown.prototype = {
+            constructor : MoveDown,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(0,10);
+            },
+            undo : function () {
+                // 反方向移回来
+                this.cursor.move(0,-10);
+            }
+        };
+
+        var MoveLeft = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveLeft.prototype = {
+            constructor : MoveLeft,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(-10,0);
+            },
+            undo : function () {
+                // 反方向移回来
+                this.cursor.move(10,0);
+            }
+        };
+
+        var MoveRight = function (cursor) {
+            this.cursor = cursor;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 实现命令的接口方法
+        MoveRight.prototype = {
+            constructor : MoveRight,
+            execute : function () {
+                // 真正的接收者调用自己的move方法（x轴,y轴）：元素移动无非在x轴和y轴上移动，因此将这两个参数的变化传入即可
+                this.cursor.move(10,0);
+            },
+            undo : function () {
+                // 反方向移回来
+                this.cursor.move(-10,0);
+            }
+        };
+
+        // 接收者（也就是操作具体方法的元素对象）// HTML5 + ECMA5
+        var Cursor = function (width,height,parent) {
+            // 宽高代表外层的DIV（canvas画布）
+            this.width = width;
+            this.height = height;
+            // 移动元素的具体位置
+            this.position = {
+                x : this.width/2,
+                y : this.height/2
+            };
+            // HTML5新特新：canvas（画布的意义）
+            this.canvas = document.createElement('canvas');
+            // 首先把画布的宽高设定上
+            this.canvas.width = this.width;
+            this.canvas.height = this.height;
+            // 添加到parent上
+            parent.appendChild(this.canvas);
+
+            // canvas 上下文元素（画布的核心对象相当于画布的画笔）
+            this.ctx = this.canvas.getContext('2d');
+            this.ctx.fillStyle = 'red'; // 填充颜色
+            this.move(0,0); // 初始化执行者的位置
+        };
+        // 简单原型实现执行者的move方法
+        Cursor.prototype = {
+            constructor : Cursor,
+            move : function (x,y) {
+                this.position.x += x;
+                this.position.y += y;
+                // alear this canvas 每次重画之前要清空画布
+                this.ctx.clearRect(0,0,this.width,this.height);
+                // 获取了x轴和y轴的为之后，开始画矩形(画出方块)
+                // 出现问题：调用一次move方法，就画一个矩形，不是想要的结果
+                // 解决：画新矩形之前清除其余的矩形
+                this.ctx.fillRect(this.position.x,this.position.y,20,20);
+            }
+        };
+
+        // 应该有一个命令的集合【数组】：目的就是为了当执行每一个命令之前 把该命令加入到集合中（入栈操作：先进后出 push（压入）pop（删除并返回最后一个元素，类似取出））
+        // 命令对象在执行真的操作之前 应该把命令加入到集合中 也就是在原始命令类基础上加一些新特性：特别适合（装饰者模式）
+
+        // 使用装饰着模式，完成这件事
+        // 当前是一个装饰命令的装饰类，要装饰命令，就要将命令实例对象作为参数传入，产生关联
+        // 两个参数（原始的命令实例对象[被装饰者],命令集合[数组]）
+        var UndoDecorator = function (command,undoStack) {
+            this.command = command;
+            this.undoStack = undoStack;
+            // 检测接口方法是否实现
+            SY.Interface.ensureImplements(this,ReversibleCommandInterface);
+        };
+        // 装饰者类要跟被装饰者类实现同样的接口(简单原型实现)
+        UndoDecorator.prototype = {
+            constructor : UndoDecorator,
+            execute : function () {
+                // 在执行真正的命令之前，把命令加入到命令集合中
+                this.undoStack.push(this.command);
+                this.command.execute();
+            },
+            undo : function () {
+                this.command.undo();
+            }
+        };
+
+        // 用js代码完善一下HTML元素即可（四个按钮[命令按钮]、回退按钮）
+
+        // 命令按钮类(按钮名称、按钮绑定什么命令、按钮元素追加到什么元素上)
+        var CommandButton = function (label,command,parent) {
+            // 检验传入的命令是否能实现命令接口（是否是合法的命令类实例对象）
+            SY.Interface.ensureImplements(command,ReversibleCommandInterface);
+            // 实例化按钮 并放到父元素上
+            this.element = document.createElement('button');
+            this.element.innerHTML = label;
+            parent.appendChild(this.element);
+            // 实例化按钮要绑定click事件
+            SY.EventUtil.addHandler(this.element,'click',function () {
+                command.execute(); // 执行该按钮绑定的命令
+            })
+        };
+
+        // 回退按钮类(重要参数是：命令集合（undoStack）从里面依次取出命令回退)
+        var UndoButton = function (label,parent,undoStack) {
+            // 实例化按钮 并放到父元素上
+            this.element = document.createElement('button');
+            this.element.innerHTML = label;
+            parent.appendChild(this.element);
+            // 绑定click事件
+            SY.EventUtil.addHandler(this.element,'click',function () {
+                // 首先判断要取命令的集合有无命令
+                if (undoStack.length === 0){
+                    alert('已经没有命令了，这是最后一步回退操作！');
+                    return;
+                }
+                // 把最后一次命令拿出来 然后执行回退操作
+                var lastCommand = undoStack.pop(); // 删除并返回数组最后一个元素
+                lastCommand.undo();
+            })
+        };
+
+        window.onload = function () {
+            var body = document.getElementsByTagName('body')[0];
+            var cursor = new Cursor(400,400,body);
+            // 命令集合（空数组）
+            var undoStack = [];
+
+            // 客户：创建命令（创建本来的命令不符合要求，要创建装饰后的命令）
+            var upCommand = new UndoDecorator(new MoveUp(cursor),undoStack);
+            var downCommand = new UndoDecorator(new MoveDown(cursor),undoStack);
+            var leftCommand = new UndoDecorator(new MoveLeft(cursor),undoStack);
+            var rightCommand = new UndoDecorator(new MoveRight(cursor),undoStack);
+
+            // 创建按钮（实例化按钮对象）
+            var upbtn = new CommandButton('up',upCommand,body);
+            var downbtn = new CommandButton('down',downCommand,body);
+            var leftbtn = new CommandButton('left',leftCommand,body);
+            var rightbtn = new CommandButton('right',rightCommand,body);
+
+            // 实例化回退按钮
+            var ubtn = new UndoButton('undo',body,undoStack);
+        };
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
