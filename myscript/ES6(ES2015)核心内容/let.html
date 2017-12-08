@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>let</title>
+</head>
+<body>
+
+<!-- Load Babel -->
+<script src="babel-standalone@6.26.0/babel.min.js"></script>
+<!-- Your custom script here -->
+<script type="text/babel">
+    // ES5 写法
+    /*
+    var name = 'xiaoming';
+    while (true){
+        var name = 'xiaoli';
+        console.log(name); // xiaoli
+        break;
+    }
+    console.log(name); // xiaoli
+    */
+    /*
+     * 使用var两次输出都是：xiaoli，
+     * 1.因为ES5只有全局作用域和函数作用域，没有块级作用域，这带来很多不合理的场景。
+     * 在while循环代码块内，name仍是全局变量，所以后声明的'xiaoli'会覆盖前声明的'xiaoming'（内层变量覆盖外层变量）
+     * let实际上为JavaScript新增了块级作用域，用let声明的变量，只在let命令所在的代码块内有效
+     * */
+    // ES6 let声明
+    /*
+    let name = 'xiaoming';
+    while (true){
+        let name = 'xiaoli';
+        console.log(name);  // xiaoli
+        break;
+    }
+    console.log(name);  // xiaoming
+    */
+    // 2.另一个var带来的不合理场景就是：用来计数的循环变量泄漏为全局变量
+    var a = [];
+    for (var i=0;i<10;i++){
+        a[i] = function () {
+            console.log(i);
+        }
+    }
+    a[6](); // 10
+</script>
+</body>
+</html>
